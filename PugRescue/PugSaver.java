@@ -4,14 +4,17 @@ import java.util.Objects;
 public class PugSaver {
 
 	//Moves every dog whose breed is "Pug" in the list to the back of the list
-	public static void rescuePugs(ArrayList<Dog> list) {
+	public static void rescuePugs(MyArrayList<Dog> list) {
 		int goldenCounter = 0;
 		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i) == null) {
+				throw new IllegalArgumentException();
+			}
 			String breed = list.get(i).getBreed();
 			if (breed.toLowerCase().contains("golden")) {
 				Dog temp = list.get(i);
 
-				for (int j = list.size() - goldenCounter; j > 0; j--) {
+				for (int j = list.size() - goldenCounter - 1; j > 0; j--) {
 					if (i >= j) {
 						break;
 					}
@@ -25,7 +28,6 @@ public class PugSaver {
 					break;
 				}
 			}
-			System.out.println(list.get(0).getBreed());
 		}
 		// ArrayList<Dog> goodBoys = new ArrayList<Dog>();
 		// ArrayList<Dog> badBoys = new ArrayList<Dog>();
