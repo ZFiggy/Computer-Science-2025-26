@@ -28,6 +28,7 @@ public class MyArrayList<E> {
 
 	/* Return the number of active slots in the array list */
 	public int size() {
+		// O(1)
 		if (internalArray == null) {
 			throw new IllegalArgumentException();
 		}
@@ -36,6 +37,7 @@ public class MyArrayList<E> {
 
 	/* Are there zero objects in the array list? */
 	public boolean isEmpty() {
+		// O(1)
 		if (objectCount == 0) {
 			return true;
 		}
@@ -44,6 +46,7 @@ public class MyArrayList<E> {
 
 	/* Get the index-th object in the list. */
 	public E get(int index) {
+		// O(1)
 		if (index < 0 || index >= objectCount) {
 			throw new IllegalArgumentException();
 		}
@@ -52,6 +55,7 @@ public class MyArrayList<E> {
 
 	/* Replace the object at index with obj. returns object that was replaced. */
 	public E set(int index, E obj) {
+		// O(1)
 		if (index < 0 || index >= objectCount) {
 			throw new IllegalArgumentException();
 		}
@@ -65,6 +69,7 @@ public class MyArrayList<E> {
 	 * otherwise returns false.
 	 */
 	public boolean contains(E obj) {
+		// O(n)
 		for (int i = 0; i < objectCount; i++) {
 			if (internalArray[i].equals(obj)) {
 				return true;
@@ -76,9 +81,10 @@ public class MyArrayList<E> {
 	/* Insert an object at index */
 	@SuppressWarnings("unchecked")
 	public void add(int index, E obj) {
+		// O(n)
 		if (index < 0 || index > objectCount) {
 			throw new IllegalArgumentException();
-		}
+		} 
 		if (this.size() == internalArray.length) {
 			E[] newArray = (E[]) new Object[internalArray.length * 2];
 			for (int i = 0; i < internalArray.length + 1; i++) {
@@ -91,6 +97,8 @@ public class MyArrayList<E> {
 				}
 			}
 			internalArray = newArray;
+		} else if (index == objectCount) {
+			internalArray[index] = obj;
 		} else {
 			for (int i = objectCount - 1; i >= index; i--) {
 				internalArray[i + 1] = internalArray[i];
@@ -103,12 +111,14 @@ public class MyArrayList<E> {
 	/* Add an object to the end of the list; returns true */
 	@SuppressWarnings("unchecked")
 	public boolean add(E obj) {
+		// O(1)
 		this.add(objectCount, obj);
 		return true;
 	}
 
 	/* Remove the object at index and shift. Returns removed object. */
 	public E remove(int index) {
+		// O(n)
 		if (index < 0 || index >= objectCount) {
 			throw new IllegalArgumentException();
 		}
@@ -130,6 +140,7 @@ public class MyArrayList<E> {
 	 * if this list changed as a result of the call).
 	 */
 	public boolean remove(E obj) {
+		// O(n)
 		if (this.contains(obj)) {
 			for (int i = 0; i < internalArray.length; i++) {
 				if (internalArray[i] == obj) {
@@ -151,6 +162,7 @@ public class MyArrayList<E> {
 	 * Elements are separated by a comma and a space.
 	 */
 	public String toString() {
+		// O(n)
 		if (internalArray == null) {
 			throw new IllegalArgumentException();
 		} else if (this.size() == 0) {
