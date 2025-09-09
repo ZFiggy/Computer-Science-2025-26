@@ -3,39 +3,39 @@ import java.util.Objects;
 
 public class PugSaver { // *******MAKE IT TO O(N) BY GETTING RID OF ADD WITHIN FOR LOOPS*******
 
-	//Moves every dog whose breed is "Pug" in the list to the back of the list
-	public static void rescuePugs(MyArrayList<Dog> list) {
+	// Moves every dog whose breed is "Pug" in the list to the back of the list
+	public static void rescuePugs(ArrayList<Dog> list) {
 		// int goldenCounter = 0;
 		// for (int i = 0; i < list.size(); i++) {
-		// 	if (list.get(i) == null) {
-		// 		throw new IllegalArgumentException();
-		// 	}
-		// 	String breed = list.get(i).getBreed();
-		// 	if (breed.toLowerCase().contains("golden")) {
-		// 		Dog temp = list.get(i);
-
-		// 		for (int j = list.size() - goldenCounter - 1; j > 0; j--) {
-		// 			if (i >= j) {
-		// 				break;
-		// 			}
-		// 			if (!list.get(j).getBreed().toLowerCase().contains("golden")) {
-		// 				list.set(i, list.get(j));
-		// 				list.set(j, temp);
-		// 				goldenCounter++;
-		// 			}
-		// 		}
-		// 		if (goldenCounter + i > list.size()) {
-		// 			break;
-		// 		}
-		// 	}
+		// if (list.get(i) == null) {
+		// throw new IllegalArgumentException();
 		// }
-		MyArrayList<Dog> goodBoys = new MyArrayList<Dog>();
-		MyArrayList<Dog> badBoys = new MyArrayList<Dog>();
+		// String breed = list.get(i).getBreed();
+		// if (breed.toLowerCase().contains("golden")) {
+		// Dog temp = list.get(i);
+
+		// for (int j = list.size() - goldenCounter - 1; j > 0; j--) {
+		// if (i >= j) {
+		// break;
+		// }
+		// if (!list.get(j).getBreed().toLowerCase().contains("golden")) {
+		// list.set(i, list.get(j));
+		// list.set(j, temp);
+		// goldenCounter++;
+		// }
+		// }
+		// if (goldenCounter + i > list.size()) {
+		// break;
+		// }
+		// }
+		// }
+		ArrayList<Dog> goodBoys = new ArrayList<Dog>();
+		ArrayList<Dog> badBoys = new ArrayList<Dog>();
 		int end = list.size() - 1;
 		for (int i = 0; i < list.size(); i++) {
 			if (end == i) {
-					break;
-				}
+				break;
+			}
 			if (list.get(i).getBreed().toLowerCase().contains("golden")) {
 				goodBoys.add(list.get(i));
 				list.set(i, list.get(end));

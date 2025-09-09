@@ -48,7 +48,7 @@ public class MyArrayList<E> {
 	public E get(int index) {
 		// O(1)
 		if (index < 0 || index >= objectCount) {
-			throw new IllegalArgumentException();
+			throw new IndexOutOfBoundsException();
 		}
 		return internalArray[index];
 	}
@@ -168,19 +168,19 @@ public class MyArrayList<E> {
 		} else if (this.size() == 0) {
 			return "[]";
 		}
-		String arrayString = "[";
+		StringBuilder arrayString = new StringBuilder("[");
 		for (int i = 0; i < objectCount - 1; i++) {
 			if (internalArray[i] == null) {
-				arrayString += "null, ";
+				arrayString.append("null, ");
 			} else {
-				arrayString += internalArray[i].toString() + ", ";
+				arrayString.append(internalArray[i].toString() + ", ");
 			}
 		}
 		if (internalArray[objectCount - 1] == null) {
-			arrayString += "null]";
+			arrayString.append("null]");
 		} else {
-			arrayString += internalArray[objectCount - 1].toString() + "]";
+			arrayString.append(internalArray[objectCount - 1].toString() + "]");
 		}
-		return arrayString;
+		return arrayString.toString();
 	}
 }
