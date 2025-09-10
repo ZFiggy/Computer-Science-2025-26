@@ -126,8 +126,8 @@ public class MyArrayList<E> {
 		for (int i = index; i < objectCount - 1; i++) {
 			internalArray[i] = internalArray[i + 1];
 		}
-		internalArray[objectCount] = null;
 		objectCount--;
+		internalArray[objectCount] = null;
 		return removed;
 	}
 
@@ -143,7 +143,7 @@ public class MyArrayList<E> {
 		// O(n)
 		if (this.contains(obj)) {
 			for (int i = 0; i < internalArray.length; i++) {
-				if (internalArray[i] == obj) {
+				if (internalArray[i].equals(obj)) {
 					this.remove(i);
 					return true;
 				}

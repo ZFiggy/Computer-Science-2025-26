@@ -8,8 +8,8 @@ public class PugSaverTester {
             testList.add(new Dog("Charlie"));
             testList.add(new Dog("Sammy", "Golden Retriever"));
             testList.add(new Dog("Forrest"));
-            // testList.add(new Dog("Zack", "Grey Doodle"));
-            // testList.add(new Dog("Mateo"));
+            testList.add(new Dog("Zack", "Grey Doodle"));
+            testList.add(new Dog("Mateo"));
         }
         //System.out.println(testList);
         PugSaver.rescuePugs(testList);
