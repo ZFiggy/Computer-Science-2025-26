@@ -29,9 +29,6 @@ public class MyArrayList<E> {
 	/* Return the number of active slots in the array list */
 	public int size() {
 		// O(1)
-		if (internalArray == null) {
-			throw new IllegalArgumentException();
-		}
 		return objectCount;
 	}
 
@@ -57,7 +54,7 @@ public class MyArrayList<E> {
 	public E set(int index, E obj) {
 		// O(1)
 		if (index < 0 || index >= objectCount) {
-			throw new IllegalArgumentException();
+			throw new IndexOutOfBoundsException();
 		}
 		E replaced = internalArray[index];
 		internalArray[index] = obj;
@@ -70,9 +67,19 @@ public class MyArrayList<E> {
 	 */
 	public boolean contains(E obj) {
 		// O(n)
-		for (int i = 0; i < objectCount; i++) {
-			if (internalArray[i].equals(obj)) {
-				return true;
+		if (obj == null) {
+			for (int i = 0; i < objectCount; i++) {
+				if (internalArray[i] == obj) {
+					return true;
+				}
+			}
+		} else {
+			for (int i = 0; i < objectCount; i++) {
+				if (internalArray[i] != null) {
+					if (internalArray[i].equals(obj)) {
+						return true;
+					}
+				}
 			}
 		}
 		return false;
@@ -83,8 +90,8 @@ public class MyArrayList<E> {
 	public void add(int index, E obj) {
 		// O(n)
 		if (index < 0 || index > objectCount) {
-			throw new IllegalArgumentException();
-		} 
+			throw new IndexOutOfBoundsException();
+		}
 		if (this.size() == internalArray.length) {
 			E[] newArray = (E[]) new Object[internalArray.length * 2];
 			for (int i = 0; i < internalArray.length + 1; i++) {
@@ -120,7 +127,7 @@ public class MyArrayList<E> {
 	public E remove(int index) {
 		// O(n)
 		if (index < 0 || index >= objectCount) {
-			throw new IllegalArgumentException();
+			throw new IndexOutOfBoundsException();
 		}
 		E removed = internalArray[index];
 		for (int i = index; i < objectCount - 1; i++) {
@@ -142,10 +149,19 @@ public class MyArrayList<E> {
 	public boolean remove(E obj) {
 		// O(n)
 		if (this.contains(obj)) {
-			for (int i = 0; i < internalArray.length; i++) {
-				if (internalArray[i].equals(obj)) {
-					this.remove(i);
-					return true;
+			if (obj == null) {
+				for (int i = 0; i < internalArray.length; i++) {
+					if (internalArray[i] == obj) {
+						this.remove(i);
+						return true;
+					}
+				}
+			} else {
+				for (int i = 0; i < internalArray.length; i++) {
+					if (internalArray[i].equals(obj)) {
+						this.remove(i);
+						return true;
+					}
 				}
 			}
 			return true;
@@ -163,9 +179,7 @@ public class MyArrayList<E> {
 	 */
 	public String toString() {
 		// O(n)
-		if (internalArray == null) {
-			throw new IllegalArgumentException();
-		} else if (this.size() == 0) {
+		if (this.size() == 0) {
 			return "[]";
 		}
 		StringBuilder arrayString = new StringBuilder("[");
