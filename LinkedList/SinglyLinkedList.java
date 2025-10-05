@@ -107,12 +107,14 @@ public class SinglyLinkedList<E> {
 
 	// Removes the first element that is equal to obj, if any.
 	// Returns true if successful; otherwise returns false.
-	@SuppressWarnings("unchecked")
 	public boolean remove(E obj) {
 		if (this.contains(obj)) {
 			if (head.getValue().equals(obj)) {
 				head = head.getNext();
 				nodeCount--;
+				if (head == null) {
+					tail = null;
+				}
 				return true;
 			}
 			for (ListNode<E> i = head; i != tail; i = i.getNext()) {
