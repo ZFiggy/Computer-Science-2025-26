@@ -7,6 +7,8 @@ public class DoublyLinkedList {
 
 	// Constructor: creates an empty list
 	public DoublyLinkedList() {
+		SENTINEL.setNext(SENTINEL);
+		SENTINEL.setPrevious(SENTINEL);
 		nodeCount = 0;
 	}
 
@@ -15,6 +17,9 @@ public class DoublyLinkedList {
 	public DoublyLinkedList(Nucleotide[] values) {
 		SENTINEL.setNext(SENTINEL);
 		SENTINEL.setPrevious(SENTINEL);
+		for (int i = 0; i < values.length; i++) {
+			add(values[i]);
+		}
 	}
 
 	public ListNode2<Nucleotide> getSentinel() {
@@ -103,7 +108,7 @@ public class DoublyLinkedList {
 			node.getNext().setPrevious(node);
 			return true;
 		}
-		for (int i = 0; i < index - 1; i++) {
+		for (int i = 0; i < index; i++) {
 			node = node.getNext();
 		}
 		node.setNext(node.getNext().getNext());
@@ -189,11 +194,20 @@ public class DoublyLinkedList {
 	// Like question 7 on the SinglyLinkedList test:
 	// Add a "segment" (another list) onto the end of this list
 	public void addSegmentToEnd(DoublyLinkedList seg) {
-		ListNode2<Nucleotide> temp = seg.getHead();
-		for (int i = 0; i < seg.size(); i++) {
-			add(temp.getValue());
-			temp = temp.getNext();
+		// ListNode2<Nucleotide> temp = seg.getHead();
+		// int size = seg.size();
+		if (seg.size() > 0) {
+			seg.getHead().setPrevious(getTail());
+			getTail().setNext(seg.getHead());
+			seg.getTail().setNext(SENTINEL);
+			SENTINEL.setPrevious(seg.getTail());
+			nodeCount += seg.size();
 		}
+		// for (int i = 0; i < size; i++) {
+		// 	add(temp.getValue());
+		// 	temp = temp.getNext();
+		// 	nodeCount++;
+		// }
 	}
 
 	// Like question 8 on the SinglyLinkedList test:
@@ -203,11 +217,14 @@ public class DoublyLinkedList {
 	public void removeCCCCCCCCGGGGGGGG(ListNode2<Nucleotide> nodeBefore) {
 		ListNode2<Nucleotide> temp = nodeBefore;
 		for (int i = 0; i < 16; i++) {
+			if (temp.equals(SENTINEL)) {
+				throw new IndexOutOfBoundsException();
+			}
 			temp.setNext(temp.getNext().getNext());
 			remove(nodeBefore.getNext().getValue());
 			nodeBefore = temp;
-			nodeCount -= 16;
 		}
+		nodeCount -= 16;
 	}
 
 	// Like question 9 on the SinglyLinkedList test:
@@ -221,7 +238,9 @@ public class DoublyLinkedList {
 			for (int i = indexOf(seg.getHead().getValue()); i > -1; i = indexOf(seg.getHead().getValue())) {
 				for (int j = 0; j < seg.size() + 1; j++) {
 					if (temp == seg.getSentinel()) {
-						// Need to remove the stuff now and decrement nodeCount
+						for (int j2 = 0; j2 < seg.size(); j2++) {
+							remove(i - seg.size() + j2);
+						}
 						return true;
 					}
 					temp = temp.getNext();
@@ -253,7 +272,16 @@ public class DoublyLinkedList {
 	// Like question 11 on the SinglyLinkedList test:
 	// Replaces every node containing "A" with three nodes containing "T" "A" "C"
 	public void replaceEveryAWithTAC() {
-
+		int count = 0;
+		for (ListNode2<Nucleotide> i = SENTINEL.getNext(); i != SENTINEL; i = i.getNext()) {
+			if (i.getValue() == Nucleotide.A) {
+				add(count + 1, Nucleotide.C);
+				add(count, Nucleotide.T);
+				count += 2;
+				i = i.getNext();
+				nodeCount += 2;
+			}
+			count++;
+		}
 	}
-
 }
