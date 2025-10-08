@@ -251,7 +251,6 @@ public class DoublyLinkedList {
 		if (seg.isEmpty() || seg.size() > size() || indexOf(seg.getHead().getValue()) == -1) {
 			return false;
 		} else {
-			ListNode2<Nucleotide> temp = seg.getHead();
 			for (int i = 0; i <= size() - seg.size(); i++) {
 				boolean check = true;
 				for (int j = 0; j < seg.size(); j++) {
