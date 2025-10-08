@@ -64,6 +64,9 @@ public class DoublyLinkedList {
 	// Returns the index of the first element in equal to obj;
 	// if not found, returns -1.
 	public int indexOf(Nucleotide obj) {
+		if (obj == null) {
+			throw new NullPointerException();
+		}
 		if (contains(obj)) {
 			int count = 0;
 			for (ListNode2<Nucleotide> i = SENTINEL.getNext(); i != SENTINEL; i = i.getNext()) {
@@ -92,6 +95,9 @@ public class DoublyLinkedList {
 	// Removes the first element that is equal to obj, if any.
 	// Returns true if successful; otherwise returns false.
 	public boolean remove(Nucleotide obj) {
+		if (obj == null) {
+			throw new NullPointerException();
+		}
 		int index = indexOf(obj);
 		if (index == -1) {
 			return false;
@@ -151,6 +157,9 @@ public class DoublyLinkedList {
 		if (i < 0 || i > nodeCount) {
 			throw new IndexOutOfBoundsException();
 		}
+		if (obj == null) {
+			throw new NullPointerException();
+		}
 		ListNode2<Nucleotide> temp = SENTINEL.getNext();
 		for (int j = 0; j < i; j++) {
 			temp = temp.getNext();
@@ -196,6 +205,9 @@ public class DoublyLinkedList {
 	public void addSegmentToEnd(DoublyLinkedList seg) {
 		// ListNode2<Nucleotide> temp = seg.getHead();
 		// int size = seg.size();
+		if (seg == null) {
+			throw new NullPointerException();
+		}
 		if (seg.size() > 0) {
 			seg.getHead().setPrevious(getTail());
 			getTail().setNext(seg.getHead());
@@ -204,9 +216,9 @@ public class DoublyLinkedList {
 			nodeCount += seg.size();
 		}
 		// for (int i = 0; i < size; i++) {
-		// 	add(temp.getValue());
-		// 	temp = temp.getNext();
-		// 	nodeCount++;
+		// add(temp.getValue());
+		// temp = temp.getNext();
+		// nodeCount++;
 		// }
 	}
 
@@ -215,40 +227,44 @@ public class DoublyLinkedList {
 	// (on the test these nodes were assumed to contain CCCCCCCCGGGGGGGG, but here
 	// you do not need to assume or check for that)
 	public void removeCCCCCCCCGGGGGGGG(ListNode2<Nucleotide> nodeBefore) {
+		if (nodeBefore == null) {
+			throw new NullPointerException();
+		}
 		ListNode2<Nucleotide> temp = nodeBefore;
 		for (int i = 0; i < 16; i++) {
-			if (temp.equals(SENTINEL)) {
+			if (temp.getNext().equals(SENTINEL)) {
 				throw new IndexOutOfBoundsException();
 			}
 			temp.setNext(temp.getNext().getNext());
-			remove(nodeBefore.getNext().getValue());
-			nodeBefore = temp;
+			temp.getNext().setPrevious(temp);
+			nodeCount--;
 		}
-		nodeCount -= 16;
 	}
 
 	// Like question 9 on the SinglyLinkedList test:
 	// You are to find and delete the first instance of seg in the list.
 	// If seg is not in the list, return false, otherwise return true.
 	public boolean deleteSegment(DoublyLinkedList seg) {
-		ListNode2<Nucleotide> temp = seg.getHead();
-		if (indexOf(seg.getHead().getValue()) == -1) {
+		if (seg == null) {
+			throw new NullPointerException();
+		}
+		if (seg.isEmpty() || seg.size() > size() || indexOf(seg.getHead().getValue()) == -1) {
 			return false;
 		} else {
-			for (int i = indexOf(seg.getHead().getValue()); i > -1; i = indexOf(seg.getHead().getValue())) {
-				for (int j = 0; j < seg.size() + 1; j++) {
-					if (temp == seg.getSentinel()) {
-						for (int j2 = 0; j2 < seg.size(); j2++) {
-							remove(i - seg.size() + j2);
-						}
-						return true;
+			ListNode2<Nucleotide> temp = seg.getHead();
+			for (int i = 0; i <= size() - seg.size(); i++) {
+				boolean check = true;
+				for (int j = 0; j < seg.size(); j++) {
+					if (!(get(i + j) == seg.get(j))) {
+						check = false;
+						break;
 					}
-					temp = temp.getNext();
-					if (indexOf(temp.getValue()) == i + 1) {
-						i++;
-					} else {
-						j += seg.size();
+				}
+				if (check) {
+					for (int k = 0; k < seg.size(); k++) {
+						remove(i);
 					}
+					return true;
 				}
 			}
 		}
@@ -279,7 +295,6 @@ public class DoublyLinkedList {
 				add(count, Nucleotide.T);
 				count += 2;
 				i = i.getNext();
-				nodeCount += 2;
 			}
 			count++;
 		}
