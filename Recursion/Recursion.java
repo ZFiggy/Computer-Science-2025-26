@@ -57,7 +57,11 @@ public class Recursion {
 	// Jumping 1-1-2 is considered different than jumping 1-2-1
 	// Precondition: n > 0
 	public static long countWaysToJumpUpStairs(int n) {
-
+		if (n == 1) {
+			return 1;
+		} else {
+			return n - 1 + countWaysToJumpUpStairs(n - 1);
+		}
 	}
 
 	// Everything above this line does NOT require a recursive helper method
@@ -74,6 +78,17 @@ public class Recursion {
 	// Order is your choice
 	public static void printSubsets(String str) {
 
+	}
+
+	public static String makeSubsets(String str) {
+		if (str.length() == 0) {
+			return "";
+		} else if (str.length() == 1) {
+			return str;
+		} else {
+			makeSubsets(str.substring(0, str.length() - 2));
+			return str;
+		}
 	}
 
 	// List contains a single String to start.
