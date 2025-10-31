@@ -91,6 +91,7 @@ public class Recursion {
 		}
 	}
 
+	// This method creates the subsets to be printed out later. It takes the list, which is just the list of the chars as Strings from the str that we had earlier. Then, we took the subsets that exist and added to those subsets to get the overall subsets and then return them all.
 	public static ArrayList<String> createSubsets(ArrayList<String> list, ArrayList<String> subsets) {
 		if (subsets.size() == 1) {
 			subsets.add(list.get(0));
@@ -116,13 +117,70 @@ public class Recursion {
 	// "cab", "cba"
 	// Order is your choice
 	public static void printPermutations(String str) {
+		ArrayList<String> subsets = createPermutations(str);
+		for (int i = 0; i < subsets.size() - 1; i++) {
+			System.out.print("\"" + subsets.get(i) + "\", ");
+		}
+		System.out.print("\"" + subsets.get(subsets.size() - 1) + "\"");
+	}
 
+	// This method creates the permutations to be printed out later. It takes a String str from the print method and then uses that in the helper method to use in making substrings to combine to form the permutations. Finally, the permutations are put into the ArrayList toReturn and then returned to be printed. 
+	public static ArrayList<String> createPermutations(String str) {
+		ArrayList<String> toReturn = new ArrayList<String>();
+		if (str.length() == 0) {
+			toReturn.add(str);
+			return toReturn;
+		} else if (str.length() == 2) {
+			toReturn.add(str);
+			String backward = str.substring(1) + str.substring(0, 1);
+			toReturn.add(backward);
+			return toReturn;
+		}
+		String letter = str.substring(0, 1);
+		ArrayList<String> permutations = createPermutations(str.substring(1));
+		for (int i = 0; i < permutations.size(); i++) {
+			for (int j = 0; j < str.length(); j++) {
+				if (j == 0) {
+					toReturn.add(letter + permutations.get(i));
+				} else if (j == str.length() - 1) {
+					toReturn.add(permutations.get(i) + letter);
+				} else {
+					toReturn.add(permutations.get(i).substring(0, j) + letter + permutations.get(i).substring(j));
+				}
+			}
+		}
+		return toReturn;
 	}
 
 	// Performs a mergeSort on the given array of ints
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void mergeSort(int[] ints) {
 
+	}
+
+	public static ArrayList<Integer> recombineArrays(ArrayList<Integer> firstArray, ArrayList<Integer> secondArray) {
+		int pointerOne = 0;
+		int pointerTwo = 0;
+		ArrayList<Integer> newList = new ArrayList<Integer>();
+		while (pointerOne != firstArray.size() && pointerTwo != secondArray.size()) {
+			if (firstArray.get(pointerOne) < secondArray.get(pointerTwo)) {
+				newList.add(firstArray.get(pointerOne));
+				pointerOne++;
+			} else {
+				newList.add(secondArray.get(pointerTwo));
+				pointerTwo++;
+			}
+		}
+		if (pointerOne == firstArray.size()) {
+			for (int i = pointerTwo; i < secondArray.size(); i++) {
+				newList.add(secondArray.get(i));
+			}
+		} else {
+			for (int i = pointerOne; i < firstArray.size(); i++) {
+				newList.add(firstArray.get(i));
+			}
+		}
+		return newList;
 	}
 
 	// Performs a quickSort on the given array of ints
