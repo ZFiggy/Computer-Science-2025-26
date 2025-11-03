@@ -62,7 +62,7 @@ public class Recursion {
 		if (n == 1) {
 			return 1;
 		} else {
-			return n - 1 + countWaysToJumpUpStairs(n - 1);
+			return n - 1 + countWaysToJumpUpStairs(n - 1) + countWaysToJumpUpStairs(n - 2) + countWaysToJumpUpStairs(n - 3);
 		}
 	}
 
