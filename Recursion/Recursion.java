@@ -91,7 +91,10 @@ public class Recursion {
 		}
 	}
 
-	// This method creates the subsets to be printed out later. It takes the list, which is just the list of the chars as Strings from the str that we had earlier. Then, we took the subsets that exist and added to those subsets to get the overall subsets and then return them all.
+	// This method creates the subsets to be printed out later. It takes the list,
+	// which is just the list of the chars as Strings from the str that we had
+	// earlier. Then, we took the subsets that exist and added to those subsets to
+	// get the overall subsets and then return them all.
 	public static ArrayList<String> createSubsets(ArrayList<String> list, ArrayList<String> subsets) {
 		if (subsets.size() == 1) {
 			subsets.add(list.get(0));
@@ -124,7 +127,11 @@ public class Recursion {
 		System.out.print("\"" + subsets.get(subsets.size() - 1) + "\"");
 	}
 
-	// This method creates the permutations to be printed out later. It takes a String str from the print method and then uses that in the helper method to use in making substrings to combine to form the permutations. Finally, the permutations are put into the ArrayList toReturn and then returned to be printed. 
+	// This method creates the permutations to be printed out later. It takes a
+	// String str from the print method and then uses that in the helper method to
+	// use in making substrings to combine to form the permutations. Finally, the
+	// permutations are put into the ArrayList toReturn and then returned to be
+	// printed.
 	public static ArrayList<String> createPermutations(String str) {
 		ArrayList<String> toReturn = new ArrayList<String>();
 		if (str.length() == 0) {
@@ -155,9 +162,40 @@ public class Recursion {
 	// Performs a mergeSort on the given array of ints
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void mergeSort(int[] ints) {
-
+		if (ints.length == 0 || ints.length == 1) {
+			return;
+		}
+		int[] right;
+		if (ints.length % 2 == 1) {
+			right = new int[ints.length / 2 + 1];
+		} else {
+			right = new int[ints.length / 2];
+		}
+		int[] left = new int[ints.length / 2];
+		for (int i = 0; i < ints.length; i++) {
+			if (i < ints.length / 2) {
+				left[i] = ints[i];
+			} else {
+				right[i - (ints.length / 2)] = ints[i];
+			}
+		}
+		mergeSort(left);
+		mergeSort(right);
+		ArrayList<Integer> leftSide = new ArrayList<Integer>();
+		ArrayList<Integer> rightSide = new ArrayList<Integer>();
+		for (int i = 0; i < left.length; i++) {
+			leftSide.add(left[i]);
+		}
+		for (int i = 0; i < right.length; i++) {
+			rightSide.add(right[i]);
+		}
+		ArrayList<Integer> finalList = recombineArrays(leftSide, rightSide);
+		for (int i = 0; i < ints.length; i++) {
+			ints[i] = finalList.get(i);
+		}
 	}
 
+	// This array recombines the arrays, putting them back together and sorting them based on the fact that the two given arrays are already sorted because it is recursively calling until the length is 1 and 1
 	public static ArrayList<Integer> recombineArrays(ArrayList<Integer> firstArray, ArrayList<Integer> secondArray) {
 		int pointerOne = 0;
 		int pointerTwo = 0;

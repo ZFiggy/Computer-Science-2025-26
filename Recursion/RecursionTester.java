@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class RecursionTester {
     public static void main(String[] args) {
-        String str = "abcd";
-        Recursion.printPermutations(str);
+        int[] ints = new int[]{3, 1, -1, 2 ,-5};
+        Recursion.mergeSort(ints);
     }
 }
