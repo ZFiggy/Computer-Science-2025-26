@@ -22,7 +22,7 @@ public class Recursion {
 	// Trying to infect outside the confines of the grid also has no effect
 	// Precondition: grid has no null entries
 	public static void infect(String[][] grid, int r, int c) {
-		if (r < 0 || r > grid[0].length || c < 0 || c > grid.length) {
+		if (r < 0 || r >= grid.length || c < 0 || c >= grid[0].length) {
 			return;
 		}
 		if (grid[r][c].equals("vaccinated") || grid[r][c].equals("infected")) {
@@ -61,9 +61,12 @@ public class Recursion {
 	public static long countWaysToJumpUpStairs(int n) {
 		if (n == 1) {
 			return 1;
-		} else {
-			return n - 1 + countWaysToJumpUpStairs(n - 1);
+		} else if (n == 2) {
+			return 2;
+		} else if (n == 3) {
+			return 4;
 		}
+		return countWaysToJumpUpStairs(n - 1) + countWaysToJumpUpStairs(n - 2) + countWaysToJumpUpStairs(n - 3);
 	}
 
 	// Everything above this line does NOT require a recursive helper method
@@ -107,7 +110,7 @@ public class Recursion {
 				subsets.add(subsets.get(i) + removed);
 			}
 			if (list.size() > 0) {
-				subsets.addAll(createSubsets(list, subsets));
+				createSubsets(list, subsets);
 			}
 		}
 		return subsets;
@@ -195,7 +198,9 @@ public class Recursion {
 		}
 	}
 
-	// This array recombines the arrays, putting them back together and sorting them based on the fact that the two given arrays are already sorted because it is recursively calling until the length is 1 and 1
+	// This array recombines the arrays, putting them back together and sorting them
+	// based on the fact that the two given arrays are already sorted because it is
+	// recursively calling until the length is 1 and 1
 	public static ArrayList<Integer> recombineArrays(ArrayList<Integer> firstArray, ArrayList<Integer> secondArray) {
 		int pointerOne = 0;
 		int pointerTwo = 0;
