@@ -5,5 +5,6 @@ public class RecursionTester {
         System.out.println(Recursion.countWaysToJumpUpStairs(7));
         // String str = "aaaa";
         // Recursion.printSubsets(str);
+        Recursion.solveHanoi(3);
     }
 }

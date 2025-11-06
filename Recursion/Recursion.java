@@ -240,7 +240,33 @@ public class Recursion {
 	// the form "1 -> 2", meaning "take the top disk of tower 1 and
 	// put it on tower 2" etc.
 	public static void solveHanoi(int startingDisks) {
+		if (startingDisks % 2 == 1) {
+			solveHanoiWithLessInMiddle(startingDisks, 0, 2, 1);
+		} else {
+			solveHanoiWithLessInMiddle(startingDisks, 0, 1, 2);
+		}
+	}
 
+	// It takes the information from solveHanoi and solves it with one less until it
+	// gets to the base case of 2. From there, it prints it out, switching around
+	// until it prints out the solution for the entirety of the problem
+	public static void solveHanoiWithLessInMiddle(int startingDisks, int start, int end, int middle) {
+		if (startingDisks == 1) {
+			System.out.println(start + " -> " + end);
+		} else if (startingDisks == 2) {
+			System.out.println(start + " -> " + end);
+			System.out.println(start + " -> " + middle);
+			System.out.println(end + " -> " + middle);
+		} else {
+			solveHanoiWithLessInMiddle(startingDisks - 1, start, end, middle);
+			if (startingDisks % 2 == 1) {
+				System.out.println(start + " -> " + end);
+				solveHanoiWithLessInMiddle(startingDisks - 1, middle, start, end);
+			} else {
+				System.out.println(start + " -> " + middle);
+				solveHanoiWithLessInMiddle(startingDisks - 1, end, middle, start);
+			}
+		}
 	}
 
 	// You are partaking in a scavenger hunt!
