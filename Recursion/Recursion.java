@@ -289,7 +289,91 @@ public class Recursion {
 	// time 9
 	// for a total of 20 points, so it would return 20.
 	public static int scavHunt(int[] times, int[] points) {
-
+		return maxReward(times, points, 0);
 	}
 
+	public static int maxReward(int[] times, int[] points, int index) {
+		if (times.length - index - 1 == 0) {
+			return points[index];
+		} else if (times.length - index - 1 < 0) {
+			return 0;
+		} else {
+			int newIndex = -1;
+			if (times.length - index - 1 > 5) {
+				for (int i = 1; i < 6; i++) {
+					if (times[i + index] > (times[index] + 4)) {
+						newIndex = i + index;
+						break;
+					}
+				}
+			} else {
+				for (int i = 0; i < times.length - index; i++) {
+					if (times[i + index] > (times[index] + 4)) {
+						newIndex = i + index;
+						break;
+					}
+				}
+			}
+			int bigNumberLeft = 0;
+			if (newIndex == -1) {
+				for (int i = index; i < points.length; i++) {
+					if (points[i] > bigNumberLeft) {
+						bigNumberLeft = points[i];
+					}
+				}
+				return bigNumberLeft;
+			}
+			int taken = points[index] + maxReward(times, points, newIndex);
+			int notTaken = maxReward(times, points, index + 1);
+			if (taken > notTaken) {
+				return taken;
+			} else {
+				return notTaken;
+			}
+		}
+
+		// public static int maxReward(int[] times, int[] points) {
+		// if (times.length == 1) {
+		// return points[0];
+		// } else if (times.length == 0) {
+		// return 0;
+		// } else {
+		// int index = 0;
+		// if (times.length > 5) {
+		// for (int i = 1; i < 6; i++) {
+		// if (times[i] > times[0] + 4) {
+		// index = i;
+		// break;
+		// }
+		// }
+		// } else {
+		// for (int i = 1; i < times.length; i++) {
+		// if (times[i] > times[0] + 4) {
+		// index = i;
+		// break;
+		// }
+		// }
+		// }
+		// int[] noTakeTimes = new int[times.length - 1];
+		// int[] noTakePoints = new int[times.length - 1];
+		// int[] takeTimes = new int[times.length - index];
+		// int[] takePoints = new int[times.length - index];
+		// for (int i = 0; i < takeTimes.length; i++) {
+		// takeTimes[i] = times[i + index];
+		// takePoints[i] = points[i + index];
+		// }
+		// for (int i = 0; i < noTakeTimes.length; i++) {
+		// noTakeTimes[i] = times[i + 1];
+		// noTakePoints[i] = points[i + 1];
+		// }
+		// if (points[0] + maxReward(takeTimes, takePoints) > maxReward(noTakeTimes, noTakePoints))
+		// {
+		// return points[0] + maxReward(takeTimes, takePoints);
+		// } else {
+		// return maxReward(noTakeTimes, noTakePoints);
+		// }
+		// }
+		// }
+
+	}
 }
