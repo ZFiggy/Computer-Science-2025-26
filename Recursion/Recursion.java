@@ -124,10 +124,9 @@ public class Recursion {
 	// Order is your choice
 	public static void printPermutations(String str) {
 		ArrayList<String> subsets = createPermutations(str);
-		for (int i = 0; i < subsets.size() - 1; i++) {
-			System.out.print("\"" + subsets.get(i) + "\", ");
+		for (String string : subsets) {
+			System.out.println(string);
 		}
-		System.out.print("\"" + subsets.get(subsets.size() - 1) + "\"");
 	}
 
 	// This method creates the permutations to be printed out later. It takes a
@@ -230,7 +229,7 @@ public class Recursion {
 	// Use the middle element (index n/2) as the pivot
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void quickSort(int[] ints) {
-		ints = sortWithPivot(ints, ints.length / 2);
+		pivot(ints, ints.length / 2);
 		for (int i : ints) {
 			System.out.println(i);
 		}
@@ -239,7 +238,28 @@ public class Recursion {
 	// This creates a left and a right based on whether the number is greater or
 	// less than the pivot and then quick sorts each side until it is completely
 	// sorted
-	public static int[] sortWithPivot(int[] ints, int pivot) {
+	public static int[] pivot(int[] ints, int pivot) {
+		// int pivotValue = ints[pivot];
+		// if (right - left == 0 || right - left == 1) {
+		// 	return;
+		// }
+		// while (left < right) {
+		// 	if (ints[left] > pivotValue) {
+		// 		if (ints[right] <= pivotValue) {
+		// 			swap(ints, left, right);
+		// 			left++;
+		// 			right--;
+		// 		} else if (ints[right] > pivotValue) {
+		// 			right--;
+		// 		} else {
+		// 			break;
+		// 		}
+		// 	} else {
+		// 		left++;
+		// 	}
+		// }
+		// pivot(ints, left / 2, 0, left - 1);
+		// pivot(ints, (ints.length - left) / 2, right + 1, ints.length - 1);
 		if (ints.length == 0 || ints.length == 1) {
 			return ints;
 		}
@@ -265,8 +285,8 @@ public class Recursion {
 		for (int i = 0; i < newGreater.length; i++) {
 			newGreater[i] = greater[i];
 		}
-		lower = sortWithPivot(newLower, (countLeft) / 2);
-		greater = sortWithPivot(newGreater, (countRight) / 2);
+		lower = pivot(newLower, (countLeft) / 2);
+		greater = pivot(newGreater, (countRight) / 2);
 
 		for (int i = 0; i < ints.length; i++) {
 			if (i <= countLeft) {
@@ -276,6 +296,12 @@ public class Recursion {
 			}
 		}
 		return ints;
+	}
+	
+	public static void swap(int[] ints, int posOne, int posTwo) {
+		int num = ints[posOne];
+		ints[posOne] = ints[posTwo];
+		ints[posTwo] = num;
 	}
 
 	// Prints a sequence of moves (one on each line)
