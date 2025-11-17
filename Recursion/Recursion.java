@@ -230,7 +230,52 @@ public class Recursion {
 	// Use the middle element (index n/2) as the pivot
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void quickSort(int[] ints) {
+		ints = sortWithPivot(ints, ints.length / 2);
+		for (int i : ints) {
+			System.out.println(i);
+		}
+	}
 
+	// This creates a left and a right based on whether the number is greater or
+	// less than the pivot and then quick sorts each side until it is completely
+	// sorted
+	public static int[] sortWithPivot(int[] ints, int pivot) {
+		if (ints.length == 0 || ints.length == 1) {
+			return ints;
+		}
+		int[] lower = new int[ints.length];
+		int[] greater = new int[ints.length];
+		int countLeft = 0;
+		int countRight = 0;
+		for (int i = 0; i < ints.length; i++) {
+			if (ints[i] < ints[pivot]) {
+				lower[countLeft] = ints[i];
+				countLeft++;
+			} else if (ints[i] > ints[pivot]) {
+				greater[countRight] = ints[i];
+				countRight++;
+			}
+		}
+		lower[countLeft] = ints[pivot];
+		int[] newLower = new int[countLeft + 1];
+		int[] newGreater = new int[countRight];
+		for (int i = 0; i < newLower.length; i++) {
+			newLower[i] = lower[i];
+		}
+		for (int i = 0; i < newGreater.length; i++) {
+			newGreater[i] = greater[i];
+		}
+		lower = sortWithPivot(newLower, (countLeft) / 2);
+		greater = sortWithPivot(newGreater, (countRight) / 2);
+
+		for (int i = 0; i < ints.length; i++) {
+			if (i <= countLeft) {
+				ints[i] = lower[i];
+			} else {
+				ints[i] = greater[i - countLeft - 1];
+			}
+		}
+		return ints;
 	}
 
 	// Prints a sequence of moves (one on each line)
@@ -292,6 +337,8 @@ public class Recursion {
 		return maxReward(times, points, 0);
 	}
 
+	// This finds the max reward starting at a given index and then it returns that,
+	// so eventually it will return the max reward for the whole scav hunt
 	public static int maxReward(int[] times, int[] points, int index) {
 		if (times.length - index - 1 == 0) {
 			return points[index];
@@ -366,7 +413,8 @@ public class Recursion {
 		// noTakeTimes[i] = times[i + 1];
 		// noTakePoints[i] = points[i + 1];
 		// }
-		// if (points[0] + maxReward(takeTimes, takePoints) > maxReward(noTakeTimes, noTakePoints))
+		// if (points[0] + maxReward(takeTimes, takePoints) > maxReward(noTakeTimes,
+		// noTakePoints))
 		// {
 		// return points[0] + maxReward(takeTimes, takePoints);
 		// } else {
