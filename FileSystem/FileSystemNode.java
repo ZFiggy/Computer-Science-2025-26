@@ -72,7 +72,7 @@ public abstract class FileSystemNode {
     @Override
     public String toString() {
         // TODO: build a string like "/root/folder/subfolder/file"
-        StringBuilder newString = new StringBuilder("\'/\'");
+        StringBuilder newString = new StringBuilder("/");
         if (this.getDepth() == 0) {
             newString.append(this.getName());
         } else if (this.getDepth() > 0) {
