@@ -1,4 +1,6 @@
+import java.nio.file.FileSystem;
 import java.util.Scanner;
+import java.util.List;
 
 /**
  * Handles interactive navigation of the file system
@@ -41,13 +43,38 @@ public class Navigator {
     /**
      * Changes the current directory based on a single path argument.
      * Behavior should mirror typical Unix shells:
-     *   - "."  refers to the current directory (no change).
-     *   - ".." moves to the parent directory (if one exists).
-     *   - Paths starting with "/" are interpreted from the root directory.
-     *   - Other paths are interpreted relative to the current directory.
+     * - "." refers to the current directory (no change).
+     * - ".." moves to the parent directory (if one exists).
+     * - Paths starting with "/" are interpreted from the root directory.
+     * - Other paths are interpreted relative to the current directory.
      */
     private void cd(String[] args) {
-        // TODO: implement directory navigation
+        FolderNode initial = currentDirectory;
+        if (args[0].charAt(0) == '/') {
+            currentDirectory = fileSystem.getRoot();
+            args[0] = args[0].substring(1);
+        }
+        String[] noSlashes = args[0].split("/");
+        for (int i = 0; i < noSlashes.length; i++) {
+            if (noSlashes[i].equals("..")) {
+                currentDirectory = currentDirectory.getParent();
+            } else if (noSlashes[i].equals(".")) {
+            } else {
+                if (currentDirectory.getChildByName(noSlashes[i]) == null) {
+                    System.out.println("no such file or directory: " + noSlashes[i]);
+                    currentDirectory = initial;
+                    return;
+                } else {
+                    if (currentDirectory.getChildByName(noSlashes[i]).isFolder()) {
+                        currentDirectory = (FolderNode) currentDirectory.getChildByName(noSlashes[i]);
+                    } else {
+                        System.out.println("not a folder");
+                        currentDirectory = initial;
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -55,25 +82,47 @@ public class Navigator {
      * Output formatting can mirror typical file system listings.
      */
     private void ls(String[] args) {
-        // TODO: print names of all child nodes of currentDirectory
+        cd(args);
+        List<FileSystemNode> kids = currentDirectory.getChildren();
+        for (FileSystemNode kid : kids) {
+            System.out.println(kid.getName());
+        }
     }
 
     /**
      * Creates a new directory inside the current directory using the provided name.
      */
     private void mkdir(String[] args) {
-        // TODO: read folder name from args and delegate to currentDirectory.addFolder(...)
+        List<FileSystemNode> kids = currentDirectory.getChildren();
+        for (int i = 0; i < kids.size(); i++) {
+            if (kids.get(i).getName().toLowerCase().equals(args[0].toLowerCase())) {
+                System.out.println("File exists");
+                return;
+            }
+        }
+        currentDirectory.addFolder(args[0]);
     }
 
     /**
      * Creates a new file inside the current directory with a given name and size.
      */
     private void touch(String[] args) {
-        // TODO: read file name and size from args and delegate to currentDirectory.addFile(...)
+        // TODO: read file name and size from args and delegate to
+        // currentDirectory.addFile(...)
+        List<FileSystemNode> kids = currentDirectory.getChildren();
+        for (int i = 0; i < kids.size(); i++) {
+            if (kids.get(i).getName().toLowerCase().equals(args[0].toLowerCase())) {
+                System.out.println("File exists");
+                return;
+            }
+        }
+        int size = (Integer.parseInt(args[1]));
+        currentDirectory.addFile(args[0], size);
     }
 
     /**
-     * Searches the current directory and its descendants for nodes with a given name
+     * Searches the current directory and its descendants for nodes with a given
+     * name
      * and prints their paths.
      */
     private void find(String[] args) {
@@ -81,7 +130,8 @@ public class Navigator {
     }
 
     /**
-     * Prints the absolute path of the current directory, from the root to this node.
+     * Prints the absolute path of the current directory, from the root to this
+     * node.
      */
     private void pwd(String[] args) {
         // TODO: use currentDirectory.toString() or similar path builder
@@ -139,21 +189,21 @@ public class Navigator {
      * then forwarding control to the appropriate helper method.
      *
      * Example inputs and how they are interpreted:
-     *   "ls"
-     *       -> command: "ls"
-     *          args: []
+     * "ls"
+     * -> command: "ls"
+     * args: []
      *
-     *   "mkdir docs"
-     *       -> command: "mkdir"
-     *          args: ["docs"]
+     * "mkdir docs"
+     * -> command: "mkdir"
+     * args: ["docs"]
      *
-     *   "touch notes.txt 100"
-     *       -> command: "touch"
-     *          args: ["notes.txt", "100"]
+     * "touch notes.txt 100"
+     * -> command: "touch"
+     * args: ["notes.txt", "100"]
      *
-     *   "cd .."
-     *       -> command: "cd"
-     *          args: [".."]
+     * "cd .."
+     * -> command: "cd"
+     * args: [".."]
      */
     public void processUserInputString(String line) {
         if (line == null || line.trim().isEmpty()) {
