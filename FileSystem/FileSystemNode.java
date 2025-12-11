@@ -44,7 +44,7 @@ public abstract class FileSystemNode {
             depth++;
             current = current.getParent();
         }
-        return depth;
+        return depth ;
     }
 
     /**

@@ -30,6 +30,7 @@ public class FileSystemTester {
 
         System.out.println("Root toString(): " + root.toString());
         System.out.println("Expected at root: '/' (or equivalent)");
+        System.out.println();
 
         // 2. Build a small structure under root
         System.out.println("\n=== Building tree structure under root ===");
@@ -42,5 +43,8 @@ public class FileSystemTester {
         int heightRoot = root.getHeight();
         int sizeRoot = root.getSize();
         int totalNodesRoot = root.getTotalNodeCount();
+
+        Navigator n = new Navigator(tree);
+        n.processUserInputString("pwd");
     }
 }
