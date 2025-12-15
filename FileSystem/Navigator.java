@@ -50,6 +50,9 @@ public class Navigator {
      */
     private void cd(String[] args) {
         FolderNode initial = currentDirectory;
+        if (args == null || args[0] == null || args[0].isEmpty()) {
+            return;
+        }
         if (args[0].charAt(0) == '/') {
             currentDirectory = fileSystem.getRoot();
             args[0] = args[0].substring(1);
@@ -82,10 +85,13 @@ public class Navigator {
      * Output formatting can mirror typical file system listings.
      */
     private void ls(String[] args) {
-        cd(args);
         List<FileSystemNode> kids = currentDirectory.getChildren();
         for (FileSystemNode kid : kids) {
+            if (kid.isFolder()) {
+            System.out.println(kid.getName() + "/");
+            } else {
             System.out.println(kid.getName());
+            }
         }
     }
 
@@ -124,24 +130,21 @@ public class Navigator {
      * and prints their paths.
      */
     private void find(String[] args) {
-        if (currentDirectory.getName().equals(args[0])) {
-            currentDirectory.toString();
-        }
+        helpFind(args[0], currentDirectory);
+    }
 
-        if (currentDirectory.getChildren().size() == 0 || !currentDirectory.isFolder()) {
+    public void helpFind(String arg, FileSystemNode currentNode) {
+        if (currentNode.getName().equals(arg)) {
+            System.out.println(currentNode.toString());
+        } else if (!currentNode.isFolder()) {
             return;
-        }
-
-        List<FileSystemNode> children = currentDirectory.getChildren();
-
-        for (FileSystemNode kid : children) {
-            if (kid.isFolder()) {
-                currentDirectory = (FolderNode) kid;
-                find(args);
-            } else {
-                if (kid.getName().equals(args[0])) {
-                    kid.toString();
-                }
+        } else {
+            FolderNode folder = (FolderNode) currentNode;
+            if (folder.getChildren().size() == 0) {
+                return;
+            }
+            for (FileSystemNode kid : folder.getChildren()) {
+                helpFind(arg, kid);
             }
         }
     }
@@ -159,7 +162,26 @@ public class Navigator {
      * respecting flags or depth limits if provided by the arguments.
      */
     private void tree(String[] args) {
-        // TODO: implement tree-style printing with indentation and branch characters
+        printTree(currentDirectory, 0);
+    }
+
+    private void printTree(FolderNode current, int depth) {
+        for (FileSystemNode kid : current.getChildren()) {
+            if (depth > 0) {
+                System.out.print("|");
+            }
+            for (int i = 0; i < depth; i++) {
+                if (i == 0) {
+                    System.out.print("   ");
+                } else {
+                    System.out.print("    ");
+                }
+            }
+            System.out.println("|---" + kid.getName());
+            if (kid.isFolder()) {
+                printTree((FolderNode) kid, depth + 1);
+            }
+        }
     }
 
     /**
@@ -167,7 +189,7 @@ public class Navigator {
      * and all of its subdirectories.
      */
     private void count(String[] args) {
-        System.out.println(currentDirectory.getTotalNodeCount());
+        System.out.println(currentDirectory.getTotalNodeCount() - 1);
     }
 
     /**

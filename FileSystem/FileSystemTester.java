@@ -45,6 +45,7 @@ public class FileSystemTester {
         int totalNodesRoot = root.getTotalNodeCount();
 
         Navigator n = new Navigator(tree);
-        n.processUserInputString("pwd");
+        n.processUserInputString("ls");
+        n.processUserInputString("tree");
     }
 }

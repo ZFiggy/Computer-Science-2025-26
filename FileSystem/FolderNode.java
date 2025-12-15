@@ -57,7 +57,7 @@ public class FolderNode extends FileSystemNode {
         if (getChildByName(fileName) != null ) {
             return false;
         }
-        children.add(new FileNode(fileName, getParent(), size));
+        children.add(new FileNode(fileName, this, size));
         return true;
     }
 
@@ -70,7 +70,7 @@ public class FolderNode extends FileSystemNode {
         if (getChildByName(folderName) != null ) {
             return false;
         }
-        children.add(new FolderNode(folderName, getParent()));
+        children.add(new FolderNode(folderName, this));
         return true;
     }
 

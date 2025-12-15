@@ -29,7 +29,8 @@ public abstract class FileSystemNode {
 
     /**
      * Indicates whether this node represents a folder.
-     * Implementations in subclasses should return true for folders and false for files.
+     * Implementations in subclasses should return true for folders and false for
+     * files.
      */
     public abstract boolean isFolder();
 
@@ -44,7 +45,7 @@ public abstract class FileSystemNode {
             depth++;
             current = current.getParent();
         }
-        return depth ;
+        return depth;
     }
 
     /**
@@ -55,7 +56,8 @@ public abstract class FileSystemNode {
 
     /**
      * Computes the total size contributed by this node and all descendants.
-     * For a file this is its own size; for a folder this is the sum of all contained files.
+     * For a file this is its own size; for a folder this is the sum of all
+     * contained files.
      */
     public abstract int getSize();
 
@@ -74,7 +76,10 @@ public abstract class FileSystemNode {
         StringBuilder newString = new StringBuilder("");
         if (this.getDepth() == 0) {
             newString.append(this.getName());
-        } else if (this.getDepth() > 0) {
+        } else if (this.getDepth() <= 1) {
+            newString.append(this.getParent().toString());
+            newString.append(this.name);
+        } else {
             newString.append(this.getParent().toString());
             newString.append("/");
             newString.append(this.name);
