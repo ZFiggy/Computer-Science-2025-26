@@ -6,6 +6,10 @@ public class Tester {
         idk.add("jake");
         idk.add("jackson");
         idk.add("abcd");
-        idk.toString();
+        System.out.println(idk.toString());
+        idk.remove("jackson");
+        System.out.println(idk.toString());
+        System.out.println(idk.min());
+        System.out.println(idk.max());
     }
 }
