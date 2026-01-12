@@ -1,11 +1,9 @@
 public class TestBST {
     public static void main(String[] args) {
-        MyBST<Integer> newBST = new MyBST<>();
-        newBST.add(10);
-        newBST.add(5);
-        newBST.add(6);
-        newBST.add(21);
-        newBST.add(12);
+        MyBST<Integer> newBST = new MyBST<Integer>();
+        newBST.add(1);
+        newBST.add(2);
+        newBST.remove(1);
         System.out.println(newBST.toString());
     }
 }
