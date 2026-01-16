@@ -41,12 +41,18 @@ public class BinaryNode<E extends Comparable<E>> {
 
 	public void setLeft(BinaryNode<E> left) {
 		this.left = left;
+		if (left == null) {
+			return;
+		}
 		this.left.setHeight(height + 1);
 		// YOU CODE: Update height
 	}
 
 	public void setRight(BinaryNode<E> right) {
 		this.right = right;
+		if (right == null) {
+			return;
+		}
 		this.right.setHeight(height + 1);
 		// YOU CODE: Update height
 	}
