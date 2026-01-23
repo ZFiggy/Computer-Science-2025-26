@@ -7,7 +7,6 @@ public class MyStack<E> extends SinglyLinkedList<E> {
     public MyStack() {
         empty = true;
         head = null;
-        tail = null;
     }
 
     public boolean push(E obj) {
@@ -26,6 +25,9 @@ public class MyStack<E> extends SinglyLinkedList<E> {
             throw new EmptyStackException();
         }
         ListNode<E> newObj = head;
+        if (head.getNext() == null) {
+            empty = true;
+        }
         head = head.getNext();
         return newObj.getValue();
     }

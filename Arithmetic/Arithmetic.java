@@ -1,12 +1,13 @@
 import java.lang.Math;
+import java.lang.StringBuilder;
 
 public class Arithmetic {
 
 	// Evaluates a String exp that has an arithmetic expression, written in classic
 	// notation
 	public static int evaluate(String exp) {
-
-		return 0;
+		String newStr = convertClassicToStout(exp);
+		return evaluateStout(newStr);
 	}
 
 	// Returns the result of doing operand1 operation operand2,
@@ -78,7 +79,42 @@ public class Arithmetic {
 	}
 
 	public static String convertClassicToStout(String exp) {
-		return "";
+		String[] newExp = exp.split(" ");
+		StringBuilder result = new StringBuilder();
+		int num = 0;
+		MyStack<String> newStack = new MyStack<String>();
+		for (int i = 0; i < newExp.length; i++) {
+			String character = newExp[i];
+			if (isOperator(character)) {
+				if (character.equals(")")) {
+					while (!newStack.peek().equals("(")) {
+						result.append(newStack.pop());
+						result.append(" ");
+					}
+					newStack.pop();
+				} else if ((priority(character) > num) || newStack.peek().equals("(")) {
+					num = priority(character);
+					newStack.push(character);
+				} else {
+					if (priority(character) <= num) {
+						while (!newStack.empty() && !newStack.peek().equals("(")) {
+							result.append(newStack.pop());
+							result.append(" ");
+						}
+						newStack.push(character);
+						num = priority(newStack.peek());
+					}
+				}
+			} else {
+				result.append(character);
+				result.append(" ");
+			}
+		}
+		while (!newStack.empty()) {
+			result.append(newStack.pop());
+			result.append(" ");
+		}
+		return result.toString().substring(0, result.toString().length() - 1);
 	}
 
 }
