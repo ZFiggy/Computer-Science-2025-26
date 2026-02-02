@@ -53,6 +53,9 @@ public class CookieMonster {
 	 * Returns the maximum number of cookies attainable.
 	 */
 	public int recursiveCookies() {
+		if (cookieGrid[0][0] == -1) {
+			return 0;
+		}
 		return recursiveCookies(0, 0);
 	}
 
@@ -136,36 +139,34 @@ public class CookieMonster {
 		int col = 0;
 		Stack<OrphanScout> stack = new Stack<>();
 		OrphanScout first = new OrphanScout(row, col, cookieGrid[0][0]);
-		int rightCookieCount = 0;
-		int downCookieCount = 0;
+		int newCookieCount = 0;
 		stack.push(first);
-		while (!(stack.peek().getEndingRow() == numRows - 1 && stack.peek().getEndingCol() == numCols - 1)) {
+		OrphanScout rightKid = null;
+		OrphanScout downKid = null;
+		int maxCookies = 0;
+		int cookies;
+		while (!stack.empty()) {
 			row = stack.peek().getEndingRow();
 			col = stack.peek().getEndingCol();
-			OrphanScout rightKid = new OrphanScout(0, 0, 0);
-			OrphanScout downKid = new OrphanScout(0, 0, 0);
 			if (validPoint(row + 1, col)) {
-				rightCookieCount = stack.peek().getCookiesDiscovered() + cookieGrid[row + 1][col];
-				rightKid = new OrphanScout(row + 1, col, rightCookieCount);
+				newCookieCount = stack.peek().getCookiesDiscovered() + cookieGrid[row + 1][col];
+				rightKid = new OrphanScout(row + 1, col, newCookieCount);
 			}
 			if (validPoint(row, col + 1)) {
-				downCookieCount = stack.peek().getCookiesDiscovered() + cookieGrid[row][col + 1];
-				downKid = new OrphanScout(row, col + 1, downCookieCount);
+				newCookieCount = stack.peek().getCookiesDiscovered() + cookieGrid[row][col + 1];
+				downKid = new OrphanScout(row, col + 1, newCookieCount);
 			}
-			stack.pop();
-			if (validPoint(row, col + 1)) {
+			cookies = stack.pop().getCookiesDiscovered();
+			if (cookies > maxCookies) {
+				maxCookies = cookies;
+			}
+			if (downKid != null) {
 				stack.push(downKid);
+				downKid = null;
 			}
-
-			if (validPoint(row + 1, col)) {
+			if (rightKid != null) {
 				stack.push(rightKid);
-			}
-		}
-		int maxCookies = 0;
-		while (!stack.empty()) {
-			int currentCookies = stack.pop().getCookiesDiscovered();
-			if (currentCookies > maxCookies) {
-				maxCookies = currentCookies;
+				rightKid = null;
 			}
 		}
 		return maxCookies;
