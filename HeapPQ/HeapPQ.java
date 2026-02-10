@@ -74,14 +74,14 @@ public class HeapPQ<E extends Comparable<E>> implements MyPriorityQueue<E> {
 	//Returns the index of the *smaller child* of index i
 	private int smallerChild(int i)
 	{
-		E childOne = heap[2 * i + 1];
-		E childTwo = heap[2 * i + 2];
 		if (i >= objectCount) {
 			throw new IllegalArgumentException();
 		}
 		if (i <= 0) {
 			throw new IllegalArgumentException();
 		}
+		E childOne = heap[2 * i + 1];
+		E childTwo = heap[2 * i + 2];
 		if (childOne != null && childTwo != null) {
 			if (childOne.compareTo(childTwo) > 0) {
 				return 2 * i + 2;
