@@ -1,11 +1,11 @@
 import java.util.EmptyStackException;
 
-public class HeapPQ<E extends Comparable<E>> implements MyPriorityQueue<E> {
+public class MyPQ<E extends Comparable<E>> implements MyPriorityQueue<E> {
 
 	private E[] heap;
 	private int objectCount;
 
-	public HeapPQ() {
+	public MyPQ() {
 		this.heap = (E[]) new Comparable[3];
 		this.objectCount = 0;
 	}
