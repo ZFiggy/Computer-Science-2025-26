@@ -8,7 +8,7 @@ public class ChocolateHashMapTester {
         ChocolateBatch b2 = new ChocolateBatch("70% Dark Bar", 70, "Ghana", 500);
         ChocolateBatch b3 = new ChocolateBatch("Milk Bar", 45, "Peru", 650);
         ChocolateBatch b4 = new ChocolateBatch("White Bar", 30, "Madagascar", 300);
-        ChocolateBatch b5 = new ChocolateBatch("Cocoa Nibs Bag", 85, "Colombia", 200);
+        ChocolateBatch b5 = null;
 
         // Keys (SKU / lot codes)
         String k1 = "SKU-TRUF-001";
@@ -24,6 +24,7 @@ public class ChocolateHashMapTester {
         System.out.println("put(" + k3 + "): " + inventory.put(k3, b3));
         System.out.println("put(" + k4 + "): " + inventory.put(k4, b4));
         System.out.println("put(" + k5 + "): " + inventory.put(k5, b5));
+        System.out.println(inventory.containsValue(null));
         inventory.rehash(100);
         System.out.println(inventory.toString());
         inventory.containsKey(k5);

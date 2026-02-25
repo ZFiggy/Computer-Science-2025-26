@@ -61,7 +61,7 @@ public class ChocolateHashMap<K, V> {
 
     // Returns the current load factor (objCount / buckets)
     public double currentLoadFactor() {
-        return objectCount / buckets.length;
+        return ((double) objectCount) / ((double) buckets.length);
     }
 
     // Return true if the key exists as a key in the map, otherwise false.
@@ -71,7 +71,7 @@ public class ChocolateHashMap<K, V> {
         if (buckets[place].getNext().isSentinel()) {
             return false;
         } else {
-            for (BatchNode i = buckets[place].getNext(); i != buckets[place]; i = i.getNext()) {
+            for (BatchNode i = buckets[place].getNext(); !i.equals(buckets[place]); i = i.getNext()) {
                 if (key.equals(((ChocolateEntry) i.getEntry()).getKey())) {
                     return true;
                 }
@@ -86,10 +86,10 @@ public class ChocolateHashMap<K, V> {
         for (int i = 0; i < buckets.length; i++) {
             if (!buckets[i].getNext().isSentinel()) {
                 for (BatchNode j = buckets[i].getNext(); !j.equals(buckets[i]); j = j.getNext()) {
-                    if (value == null && j.getEntry() == null) {
+                    if (value == null && ((ChocolateEntry) j.getEntry()).getValue() == null) {
                         return true;
-                    } else if (!(value == null || j.getEntry() == null)) {
-                        if (j.getEntry().equals(value)) {
+                    } else if (!(value == null || ((ChocolateEntry) j.getEntry()).getValue() == null)) {
+                        if (((ChocolateEntry) j.getEntry()).getValue().equals(value)) {
                             return true;
                         }
                     }
@@ -105,14 +105,16 @@ public class ChocolateHashMap<K, V> {
     // If a pair should be added, add it to the END of the bucket.
     // After adding the pair, check if the load factor is greater than the limit.
     // - If so, you must call rehash with double the current bucket size.
-    @SuppressWarnings("unchecked")
     public boolean put(K key, V value) {
         ChocolateEntry<K, V> newBatch = new ChocolateEntry<K, V>(key, value);
-        BatchNode newNode = new BatchNode<>(newBatch);
+        BatchNode<ChocolateEntry<K, V>> newNode = new BatchNode<ChocolateEntry<K, V>>(newBatch);
         int place = whichBucket(key);
+        if (place > buckets.length || place < 0) {
+            return false;
+        }
         if (containsKey(key)) {
             return false;
-        } else if (!buckets[place].getNext().isSentinel()) {
+        } else if (buckets[place].getNext().isSentinel()) {
             newNode.setPrevious(buckets[place]);
             newNode.setNext(buckets[place]);
             buckets[place].setNext(newNode);
@@ -124,10 +126,9 @@ public class ChocolateHashMap<K, V> {
             newNode.setNext(buckets[place]);
         }
         objectCount++;
-        if (objectCount / buckets.length > loadFactorLimit) {
+        if (currentLoadFactor() > loadFactorLimit) {
             rehash(buckets.length * 2);
         }
-        System.out.println("This is broken");
         return true;
     }
 
@@ -160,7 +161,8 @@ public class ChocolateHashMap<K, V> {
             K newKey = (K) ((ChocolateEntry) i.getEntry()).getKey();
             if (key.equals(newKey)) {
                 i.getPrevious().setNext(i.getNext());
-                i.getNext().setNext(i.getPrevious());
+                i.getNext().setPrevious(i.getPrevious());
+                objectCount--;
                 return true;
             }
         }
@@ -180,8 +182,9 @@ public class ChocolateHashMap<K, V> {
         BatchNode<ChocolateEntry<K, V>>[] oldBuckets = buckets;
         buckets = (BatchNode<ChocolateEntry<K, V>>[]) new BatchNode[newBucketCount];
         fillArrayWithSentinels(buckets);
+        objectCount = 0;
         for (int i = 0; i < oldBuckets.length; i++) {
-            for (BatchNode j = oldBuckets[i].getNext(); !j.equals(buckets[i]); j = j.getNext()) {
+            for (BatchNode j = oldBuckets[i].getNext(); !j.equals(oldBuckets[i]); j = j.getNext()) {
                 K key = (K) ((ChocolateEntry) j.getEntry()).getKey();
                 V value = (V) ((ChocolateEntry) j.getEntry()).getValue();
                 put(key, value);
@@ -210,10 +213,10 @@ public class ChocolateHashMap<K, V> {
                     V value = (V) ((ChocolateEntry) j.getEntry()).getValue();
                     str.append(key + "," + value + " ");
                 }
-                str.append(" }");
+                str.append("} ");
             }
         }
-        str.append(" ]");
+        str.append("]");
         return str.toString();
     }
 }
