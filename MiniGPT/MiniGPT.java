@@ -11,6 +11,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.StringBuilder;
+import java.util.Map;
+import java.util.Set;
 
 public class MiniGPT {
 
@@ -18,6 +20,7 @@ public class MiniGPT {
 
 	public MiniGPT(String fileName, int chainOrder) {
 		try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+			map = new HashMap<String, ArrayList<Character>>();
 			int charAsInt;
 			ArrayList<Character> chars = new ArrayList<>();
 			// Read until the end of the stream (-1 is returned)
@@ -26,9 +29,9 @@ public class MiniGPT {
 				char character = (char) charAsInt;
 				chars.add((Character) character);
 			}
-			for (int i = 0; i < chars.size(); i++) {
+			for (int i = 0; i < chars.size() - chainOrder - 1; i++) {
 				StringBuilder newString = new StringBuilder();
-				for (int j = 0; j < chainOrder + i; j++) {
+				for (int j = 0; j < chainOrder; j++) {
 					newString.append(chars.get(j + i));
 				}
 				if (map.containsKey(newString.toString())) {
@@ -44,32 +47,46 @@ public class MiniGPT {
 		}
 	}
 
-	public static HashMap<String, ArrayList<String>> readData(String filePath) {
+	// public static HashMap<String, ArrayList<String>> readData(String filePath) {
 
-		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-			String line;
-			ArrayList<String[]> newStrings = new ArrayList<String[]>();
-			while ((line = br.readLine()) != null) {
-				newStrings.add(line.substring(0, 0))
-			}
-			HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-			for (int i = 0; i < newStrings.size(); i++) {
-				if (map.containsKey(newStrings.get(i)[0])) {
-					map.get(newStrings.get(i)[0]).add(newStrings.get(i)[1]);
-				} else {
-					ArrayList<String> list = new ArrayList<String>();
-					list.add(newStrings.get(i)[1]);
-					map.put(newStrings.get(i)[0], list);
-				}
-			}
-			return map;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+	// try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+	// String line;
+	// ArrayList<String[]> newStrings = new ArrayList<String[]>();
+	// while ((line = br.readLine()) != null) {
+	// newStrings.add(line.substring(0, 0))
+	// }
+	// HashMap<String, ArrayList<String>> map = new HashMap<String,
+	// ArrayList<String>>();
+	// for (int i = 0; i < newStrings.size(); i++) {
+	// if (map.containsKey(newStrings.get(i)[0])) {
+	// map.get(newStrings.get(i)[0]).add(newStrings.get(i)[1]);
+	// } else {
+	// ArrayList<String> list = new ArrayList<String>();
+	// list.add(newStrings.get(i)[1]);
+	// map.put(newStrings.get(i)[0], list);
+	// }
+	// }
+	// return map;
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// return null;
+	// }
+	// }
 
 	public void generateText(String outputFileName, int numChars) {
-
+		MiniGPT newGPT = new MiniGPT(outputFileName, 6);
+		String[] keys = newGPT.map.keySet().toArray(new String[0]);
+		StringBuilder curr = new StringBuilder();
+		curr.append(keys[0]);
+		System.out.print(curr.toString());
+		
+		for (int i = 0; i < numChars; i++) {
+			String currString = curr.toString();
+			int index = (int) (Math.random() * newGPT.map.get(currString).size());
+			char nextChar = newGPT.map.get(currString).get(index);
+			System.out.print(nextChar);
+			curr.deleteCharAt(0);
+			curr.append(nextChar);
+		}
 	}
 }
