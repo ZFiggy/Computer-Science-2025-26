@@ -30,25 +30,35 @@ public class RLECompression {
         char previousChar = (char) br.read();
         int count = 1;
 
-        while (br.ready()) {
-            char c = (char) br.read();
+        if (!(((int) previousChar) == -1)) {
+            while (br.ready()) {
+                char c = (char) br.read();
 
-            if (previousChar == c) {
-                count++;
-            } else {
-                if (count == 1) {
-                    pw.write(previousChar);
+                if (previousChar == c) {
+                    count++;
                 } else {
-                    pw.write(previousChar);
-                    pw.write(previousChar);
-                    pw.write((char) count + '0');
-                    count = 1;
+                    if (count == 1) {
+                        pw.write(previousChar);
+                        previousChar = c;
+                    } else {
+                        pw.write(previousChar);
+                        pw.write(previousChar);
+                        pw.write((char) count + '0');
+                        previousChar = c;
+                        count = 1;
+                    }
                 }
+                // TO-DO
+                // Now here: do things with the char you just read, dependent on the char you
+                // just read
             }
-            previousChar = c;
-            // TO-DO
-            // Now here: do things with the char you just read, dependent on the char you
-            // just read
+            if (count == 1) {
+                pw.write(previousChar);
+            } else {
+                pw.write(previousChar);
+                pw.write(previousChar);
+                pw.write((char) count + '0');
+            }
         }
         br.close();
         pw.close();
@@ -61,24 +71,32 @@ public class RLECompression {
         PrintWriter pw = new PrintWriter(fileName.substring(0, fileName.length() - 4));
 
         char previousChar = (char) br.read();
+        int repeat = 1;
 
         while (br.ready()) {
             char c = (char) br.read();
 
-            if ((!isNumber(c) && isNumber(previousChar) && previousChar != c)) {
-                pw.write(previousChar);
-            } else if ((isNumber(c) && !isNumber(previousChar))) {
+            if ((isNumber(c) && repeat == 2)) {
                 for (int i = 0; i < ((int) c) - 48; i++) {
                     pw.write(previousChar);
                 }
+                repeat = 0;
+            } else if (c == previousChar && repeat == 1) {
+                repeat++;
+            } else {
+                if (repeat == 1) {
+                    pw.write(previousChar);
+                }
+                previousChar = c;
+                repeat = 1;
             }
             // TO-DO
             // Now here: do things with the char you just read, dependent on the char you
             // just read
         }
 
-        if (!isNumber(previousChar)) {
-            pw.write(fileName);
+        if (repeat == 1) {
+            pw.write(previousChar);
         }
 
         br.close();
@@ -123,7 +141,7 @@ public class RLECompression {
         StringBuilder finalAnswer = new StringBuilder();
 
         for (int i = 0; i < rotations.length; i++) {
-            finalAnswer.append(rotations[i].substring(rotations.length - 1));
+            finalAnswer.append(rotations[i].charAt(rotations.length - 1));
         }
 
         // And then write the transformation into a file
@@ -168,9 +186,9 @@ public class RLECompression {
         // TO-DO
         // Now undo the Burrows-Wheeler transform
 
-        for (int j = 0; j < reconstructions.length; j++) {
+        for (int j = 0; j < reconstructions.length - 1; j++) {
 
-            ArrayList<String> newRoationsArray = new ArrayList<String>(originalText.length() - 1);
+            ArrayList<String> newRoationsArray = new ArrayList<String>(originalText.length());
             for (int i = 0; i < originalText.length(); i++) {
                 newRoationsArray.add(reconstructions[i].toString());
             }
@@ -178,21 +196,21 @@ public class RLECompression {
             Collections.sort(newRoationsArray);
 
             for (int i = 0; i < originalText.length(); i++) {
-                String toChange = newRoationsArray.get(i);
-                String toAdd = reconstructions[i].toString();
-                String finalToAdd = toAdd + toChange;
-                newRoationsArray.set(i, finalToAdd);
-            }
-
-            for (int i = 0; i < originalText.length(); i++) {
-                StringBuilder stringToAdd = new StringBuilder(newRoationsArray.get(i));
-                reconstructions[i] = stringToAdd;
+                reconstructions[i] = new StringBuilder(originalText.charAt(i) + newRoationsArray.get(i));
             }
         }
+
+        for (int i = 0; i < reconstructions.length; i++) {
+            if (reconstructions[i].charAt(0) == '\0') {
+                reconstructions[0] = reconstructions[i];
+                break;
+            }
+        }
+
         // TO-DO
         // And write the appropriate reconstruction into the file, without the null char
         PrintWriter pw = new PrintWriter(fileName.substring(0, fileName.length() - 3));
-        pw.write(reconstructions[0].toString());
+        pw.write(reconstructions[0].substring(1));
         pw.close();
     }
 }
