@@ -12,7 +12,7 @@ public class RLECompressionTester {
             g.delete();
             c.delete();
             RLECompression.compress("words.txt");
-            RLECompression.decompress("decode.txt");
+            RLECompression.decompress("words.txt.bw.rle");
         } catch (Exception e) {
             
         }
