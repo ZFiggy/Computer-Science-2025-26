@@ -7,10 +7,6 @@ public class RLECompressionTester {
             File b = new File("words.txt.bw.rle");
             f.delete();
             b.delete();
-            File g = new File("decode");
-            File c = new File("dec");
-            g.delete();
-            c.delete();
             RLECompression.compress("words.txt");
             RLECompression.decompress("words.txt.bw.rle");
         } catch (Exception e) {
