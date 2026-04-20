@@ -15,8 +15,12 @@ public class HuffmanCodeGenerator {
             while ((charAsInt = reader.read()) != -1) {
                 // Cast the integer value to a character
                 char character = (char) charAsInt;
-                int value = map.get(character);
-                map.put(character, value + 1);
+                if (map.containsKey(character)) {
+                    int value = map.get(character);
+                    map.put(character, value + 1);
+                } else {
+                    map.put(character, 1);
+                }
             }
             map.put(((char) 26), 1);
         } catch (Exception e) {
@@ -25,6 +29,9 @@ public class HuffmanCodeGenerator {
     }
 
     public int getFrequency(char c) {
-        return map.get(c);
+        if (map.containsKey(c)) {
+            return map.get(c);
+        }
+        return 0;
     }
 }
