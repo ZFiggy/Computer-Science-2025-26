@@ -50,6 +50,7 @@ public class HuffmanCodeGenerator {
         return frequencyArray;
     }
 
+    @SuppressWarnings("unchecked")
     public void createTree() {
         ArrayList<FrequencyNode> sortedArray = frequencySort();
         while (sortedArray.size() > 1) {
@@ -58,6 +59,16 @@ public class HuffmanCodeGenerator {
             int parentFrequency = sortedArray.get(last).getFrequency() + sortedArray.get(almostLast).getFrequency();
 
             FrequencyNode parent = new FrequencyNode(null, parentFrequency);
+            parent.setLeft(sortedArray.get(last));
+            parent.setRight(sortedArray.get(almostLast));
+            sortedArray.get(last).setParent(parent);
+            sortedArray.get(almostLast).setParent(parent);
+            sortedArray.remove(last);
+            sortedArray.remove(almostLast);
+            sortedArray.add(parent);
+            Collections.sort(sortedArray);
         }
+
+        //Need to make root node case
     }
 }
