@@ -1,11 +1,16 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HuffmanCodeGenerator {
 
     private HashMap<Character, Integer> map;
+
 
     public HuffmanCodeGenerator(String frequencyFile) {
         try (BufferedReader reader = new BufferedReader(new FileReader(frequencyFile))) {
@@ -33,5 +38,26 @@ public class HuffmanCodeGenerator {
             return map.get(c);
         }
         return 0;
+    }
+
+    @SuppressWarnings("unchecked")
+    public ArrayList<FrequencyNode> frequencySort() {
+        ArrayList<FrequencyNode> frequencyArray = new ArrayList<>();
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            frequencyArray.add(new FrequencyNode(entry.getKey(), entry.getValue()));
+        }
+        Collections.sort(frequencyArray);
+        return frequencyArray;
+    }
+
+    public void createTree() {
+        ArrayList<FrequencyNode> sortedArray = frequencySort();
+        while (sortedArray.size() > 1) {
+            int last = sortedArray.size() - 1;
+            int almostLast = sortedArray.size() - 2;
+            int parentFrequency = sortedArray.get(last).getFrequency() + sortedArray.get(almostLast).getFrequency();
+
+            FrequencyNode parent = new FrequencyNode(null, parentFrequency);
+        }
     }
 }
