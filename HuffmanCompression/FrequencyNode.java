@@ -1,13 +1,13 @@
 public class FrequencyNode implements Comparable {
 
-    private Character value;
+    private char value;
     private int frequency;
     private FrequencyNode parent;
     private FrequencyNode left;
     private FrequencyNode right;
-    private int binary;
+    private String binary;
 
-    public FrequencyNode(Character value, int frequency, FrequencyNode parent, FrequencyNode left, FrequencyNode right, int binary) {
+    public FrequencyNode(char value, int frequency, FrequencyNode parent, FrequencyNode left, FrequencyNode right, String binary) {
         this.value = value;
         this.frequency = frequency;
         this.parent = parent;
@@ -16,13 +16,13 @@ public class FrequencyNode implements Comparable {
         this.binary = binary;
     }
 
-    public FrequencyNode(Character value, int frequency) {
+    public FrequencyNode(char value, int frequency) {
         this.value = value;
         this.frequency = frequency;
         this.parent = null;
         this.left = null;
         this.right = null;
-        this.binary = -1;
+        this.binary = "";
     }
 
     /**
@@ -70,14 +70,14 @@ public class FrequencyNode implements Comparable {
     /**
      * @return the binary
      */
-    public int getBinary() {
+    public String getBinary() {
         return binary;
     }
 
     /**
      * @param binary the binary to set
      */
-    public void setBinary(int binary) {
+    public void setBinary(String binary) {
         this.binary = binary;
     }
 
@@ -94,14 +94,14 @@ public class FrequencyNode implements Comparable {
     /**
      * @return the value
      */
-    public Character getValue() {
+    public char getValue() {
         return value;
     }
 
     /**
      * @param value the value to set
      */
-    public void setValue(Character value) {
+    public void setValue(char value) {
         this.value = value;
     }
 

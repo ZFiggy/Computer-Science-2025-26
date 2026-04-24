@@ -1,21 +1,31 @@
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class HuffmanCodeGeneratorTester {
     public static void main(String[] args) {
-        HuffmanCodeGenerator newGenerator = new HuffmanCodeGenerator("ABCDEFG.txt");
-
-        System.out.println(newGenerator.getFrequency('A'));
-        System.out.println(newGenerator.getFrequency('a'));
-
-        ArrayList<FrequencyNode> sortedList = newGenerator.frequencySort();
-        for (FrequencyNode node : sortedList) {
-            System.out.println(node.getFrequency());
+        HuffmanCodeGenerator newGenerator;
+        try {
+            newGenerator = new HuffmanCodeGenerator("ABCDEFG.txt");
+            HuffmanCodeGeneratorTester.treePrinter(newGenerator.getRoot(), 0);
+            System.out.println(newGenerator.getCode('D'));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+    
+    public static void treePrinter(FrequencyNode node, int givenDepth) {
+        char root = node.getValue();
+        int rootFrequency = node.getFrequency();
+        for (int i = 0; i < givenDepth; i++) {
+            System.out.print("    ");
+        }
+        System.out.println("{" + root + "}" + " | Frequency: " + rootFrequency + " | Binary: " + node.getBinary());
 
-        newGenerator.createTree();
-        FrequencyNode root = newGenerator.getRoot();
-        System.out.println(root.getFrequency());
-        System.out.println(root.getLeft().getFrequency());
-        System.out.println(root.getRight().getFrequency());
+        if (node.getLeft() != null) {
+            treePrinter(node.getLeft(), givenDepth + 1);
+        }
+        if (node.getRight() != null) {
+            treePrinter(node.getRight(), givenDepth + 1);
+        }
     }
 }
