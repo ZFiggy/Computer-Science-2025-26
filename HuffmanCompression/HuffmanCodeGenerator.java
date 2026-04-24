@@ -10,7 +10,7 @@ import java.util.Map;
 public class HuffmanCodeGenerator {
 
     private HashMap<Character, Integer> map;
-
+    private FrequencyNode root = null;
 
     public HuffmanCodeGenerator(String frequencyFile) {
         try (BufferedReader reader = new BufferedReader(new FileReader(frequencyFile))) {
@@ -40,6 +40,10 @@ public class HuffmanCodeGenerator {
         return 0;
     }
 
+    public FrequencyNode getRoot() {
+        return root;
+    }
+
     @SuppressWarnings("unchecked")
     public ArrayList<FrequencyNode> frequencySort() {
         ArrayList<FrequencyNode> frequencyArray = new ArrayList<>();
@@ -67,8 +71,16 @@ public class HuffmanCodeGenerator {
             sortedArray.remove(almostLast);
             sortedArray.add(parent);
             Collections.sort(sortedArray);
+            root = parent;
         }
+    }
 
-        //Need to make root node case
+    public void setBinary() {
+        while(root.getLeft() != null || root.getRight() != null) {
+            if (root.getLeft() != null) {
+                root.getLeft().setBinary(0);
+                // Need to figure out how to loop through everything and make sure that the node resets to a next node. Maybe use the arraylist from before? Probably a bad idea though. Not a part of my Huffman Day 3 Submission just trying to work on it
+            }
+        }
     }
 }

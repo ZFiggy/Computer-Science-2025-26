@@ -22,7 +22,7 @@ public class FrequencyNode implements Comparable {
         this.parent = null;
         this.left = null;
         this.right = null;
-        this.binary = 0;
+        this.binary = -1;
     }
 
     /**
