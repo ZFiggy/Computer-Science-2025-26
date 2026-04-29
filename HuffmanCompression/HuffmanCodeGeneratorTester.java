@@ -5,14 +5,15 @@ public class HuffmanCodeGeneratorTester {
     public static void main(String[] args) {
         HuffmanCodeGenerator newGenerator;
         try {
-            newGenerator = new HuffmanCodeGenerator("ABCDEFG.txt");
+            newGenerator = new HuffmanCodeGenerator("frequencyCountInput.txt");
             HuffmanCodeGeneratorTester.treePrinter(newGenerator.getRoot(), 0);
-            System.out.println(newGenerator.getCode('D'));
+            HuffmanEncoder newEncoder = new HuffmanEncoder("frequencyCountInput.txt.key");
+            newEncoder.encodeFileToHuffmanCodes("frequencyCountInput.txt", "frequencyEncoded.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     public static void treePrinter(FrequencyNode node, int givenDepth) {
         char root = node.getValue();
         int rootFrequency = node.getFrequency();

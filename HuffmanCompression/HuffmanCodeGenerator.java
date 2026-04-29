@@ -13,10 +13,12 @@ public class HuffmanCodeGenerator {
 
     private HashMap<Character, Integer> map;
     private FrequencyNode root = null;
+    private HashMap<Character, String> binaryDictionary;
 
     public HuffmanCodeGenerator(String frequencyFile) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(frequencyFile))) {
             map = new HashMap<Character, Integer>();
+            binaryDictionary = new HashMap<Character, String>();
             int charAsInt;
             // Read until the end of the stream (-1 is returned)
             while ((charAsInt = reader.read()) != -1) {
@@ -84,6 +86,9 @@ public class HuffmanCodeGenerator {
 
     public void assignBinary(FrequencyNode node) {
         String currentBinary = node.getBinary();
+        if (node.getLeft() == null && node.getRight() == null) {
+            binaryDictionary.put(node.getValue(), currentBinary);
+        }
         if (node.getLeft() != null) {
             node.getLeft().setBinary(currentBinary + "0");
             assignBinary(node.getLeft());
@@ -95,56 +100,65 @@ public class HuffmanCodeGenerator {
     }
 
     public String getCode(char c) {
-        FrequencyNode node = getNode(root, c);
-        if (node == null) {
+        if (binaryDictionary.get(c) == null) {
             return "";
         }
-        return node.getBinary();
+        return binaryDictionary.get(c);
     }
 
-    public FrequencyNode getNode(FrequencyNode node, char c) {
-        if (c == (char) 0) {
-            return null;
-        }
-        if (node.getValue() == c) {
-            return node;
-        } else {
-            if (node.getLeft() != null) {
-                FrequencyNode leftNode = getNode(node.getLeft(), c);
-                if (leftNode != null) {
-                    return leftNode;
-                }
-            }
-            if (node.getRight() != null) {
-                FrequencyNode rightNode = getNode(node.getRight(), c);
-                if (rightNode != null) {
-                    return rightNode;
-                }
-            }
-        }
-        return null;
-    }
+    // public FrequencyNode getNode(FrequencyNode node, char c) {
+    //     if (c == (char) 0) {
+    //         return null;
+    //     }
+    //     if (node.getValue() == c) {
+    //         return node;
+    //     } else {
+    //         if (node.getLeft() != null) {
+    //             FrequencyNode leftNode = getNode(node.getLeft(), c);
+    //             if (leftNode != null) {
+    //                 return leftNode;
+    //             }
+    //         }
+    //         if (node.getRight() != null) {
+    //             FrequencyNode rightNode = getNode(node.getRight(), c);
+    //             if (rightNode != null) {
+    //                 return rightNode;
+    //             }
+    //         }
+    //     }
+    //     return null;
+    // }
 
     public void makeCodeFile(String codeFile) throws IOException {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(codeFile));
-            PrintWriter pw = new PrintWriter(codeFile + ".huf");
+            PrintWriter pw = new PrintWriter(codeFile + ".key");
 
-            StringBuilder toReturn = new StringBuilder();
-
-            char previousChar = (char) br.read();
-
-            while (br.ready()) {
-                previousChar = (char) br.read();
-                String toAdd = getCode(previousChar);
-                toReturn.append(toAdd);
+            for (int i = 0; i < 128; i++) {
+                pw.write(getCode((char) i) + '\n');
             }
-
-            br.close();
-            pw.write(toReturn.toString());
             pw.close();
         } catch (Exception e) {
             System.out.println("Uh oh.");
         }
+        // try {
+        // BufferedReader br = new BufferedReader(new FileReader(codeFile));
+        // PrintWriter pw = new PrintWriter(codeFile + ".huf");
+
+        // StringBuilder toReturn = new StringBuilder();
+
+        // char previousChar = (char) br.read();
+
+        // while (br.ready()) {
+        // previousChar = (char) br.read();
+        // String toAdd = getCode(previousChar);
+        // toReturn.append(toAdd);
+        // }
+
+        // br.close();
+        // pw.write(toReturn.toString());
+        // pw.close();
+        // } catch (Exception e) {
+        // System.out.println("Uh oh.");
+        // }
     }
 }
