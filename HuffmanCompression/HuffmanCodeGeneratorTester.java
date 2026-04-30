@@ -9,6 +9,9 @@ public class HuffmanCodeGeneratorTester {
             HuffmanCodeGeneratorTester.treePrinter(newGenerator.getRoot(), 0);
             HuffmanEncoder newEncoder = new HuffmanEncoder("frequencyCountInput.txt.key");
             newEncoder.encodeFileToHuffmanCodes("frequencyCountInput.txt", "frequencyEncoded.txt");
+            newEncoder.encodeFile("frequencyCountInput.txt");
+            HuffmanDecoder newDecoder = new HuffmanDecoder("frequencyCountInput.txt.key");
+            newDecoder.decodeFileFromHuffmanCodes("frequencyEncoded.txt", "frequencyCountInput.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
