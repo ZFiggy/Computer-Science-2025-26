@@ -131,7 +131,7 @@ public class HuffmanCodeGenerator {
 
     public void makeCodeFile(String codeFile) throws IOException {
         try {
-            PrintWriter pw = new PrintWriter(codeFile + ".key");
+            PrintWriter pw = new PrintWriter("studentCodeFile.txt");
 
             for (int i = 0; i < 128; i++) {
                 pw.write(getCode((char) i) + '\n');

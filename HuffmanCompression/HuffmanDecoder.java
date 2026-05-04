@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ public class HuffmanDecoder {
 
                 if (previousChar == (char) '\n') {
                     if (!binary.equals("")) {
-                        dictionary.put(binary, (char) count);
+                        dictionary.put(binary.trim(), (char) count);
                         binary = "";
                     }
                     count++;
@@ -84,17 +86,22 @@ public class HuffmanDecoder {
     }
 
     public void decodeFile(String encodedFile) {
+        String newFile = encodedFile.substring(0, encodedFile.length() - 4);
+        decodeFileHelper(encodedFile);
+        decodeFileFromHuffmanCodes("newFile.txt", newFile);
+        File f = new File("newFile.txt");
+        f.delete();
+    }
 
-        // This is broken right now
-
+    public void decodeFileHelper(String encodedFile) {
         if (!encodedFile.substring(encodedFile.length() - 4).equals(".huf")) {
             throw new IllegalArgumentException("Must be a .huf");
         }
         try {
             BufferedReader br = new BufferedReader(new FileReader(encodedFile));
-            PrintWriter pw = new PrintWriter(encodedFile.substring(0, encodedFile.length() - 4));
+            PrintWriter pw = new PrintWriter("newFile.txt");
 
-            int previousChar;
+            char previousChar;
             String binary = "";
 
             while (br.ready()) {
@@ -102,6 +109,9 @@ public class HuffmanDecoder {
                 int charAsInt = (int) previousChar;
                 binary += previousChar;
                 String binaryConvert = Integer.toBinaryString(charAsInt);
+                for (int i = binaryConvert.length(); i < 8; i++) {
+                    binaryConvert = '0' + binaryConvert;
+                }
                 if (charAsInt == (char) 26) {
                     break;
                 }
