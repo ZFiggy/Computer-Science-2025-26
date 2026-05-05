@@ -12,7 +12,7 @@ public class HuffmanCodeGeneratorTester {
             newEncoder.encodeFile("frequencyCountInput.txt");
             HuffmanDecoder newDecoder = new HuffmanDecoder("studentCodeFile.txt");
             newDecoder.decodeFileFromHuffmanCodes("frequencyEncoded.txt", "frequencyCountInput.txt");
-            newDecoder.decodeFile("frequencyCountInputt.txt.huf");
+            newDecoder.decodeFile("frequencyCountInput.txt.huf");
         } catch (IOException e) {
             e.printStackTrace();
         }
