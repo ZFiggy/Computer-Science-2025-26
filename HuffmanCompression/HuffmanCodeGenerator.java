@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 public class HuffmanCodeGenerator {
 
@@ -61,41 +62,64 @@ public class HuffmanCodeGenerator {
         return frequencyArray;
     }
 
-    @SuppressWarnings("unchecked")
     public void createTree() {
-        ArrayList<FrequencyNode> sortedArray = frequencySort();
-        while (sortedArray.size() > 1) {
-            int last = sortedArray.size() - 1;
-            int almostLast = sortedArray.size() - 2;
-            int parentFrequency = sortedArray.get(last).getFrequency() + sortedArray.get(almostLast).getFrequency();
+        PriorityQueue<FrequencyNode> pq = new PriorityQueue<FrequencyNode>();
 
-            FrequencyNode parent = new FrequencyNode((char) 0, parentFrequency);
-            parent.setLeft(sortedArray.get(last));
-            parent.getLeft().setBinary("0");
-            parent.setRight(sortedArray.get(almostLast));
-            parent.getRight().setBinary("1");
-            sortedArray.get(last).setParent(parent);
-            sortedArray.get(almostLast).setParent(parent);
-            sortedArray.remove(last);
-            sortedArray.remove(almostLast);
-            sortedArray.add(parent);
-            Collections.sort(sortedArray);
-            root = parent;
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            pq.add(new FrequencyNode(entry.getKey(), entry.getValue()));
         }
+
+        while (pq.size() > 1) {
+            FrequencyNode left = pq.poll();
+            FrequencyNode right = pq.poll();
+            FrequencyNode parent = new FrequencyNode((char) 0, left.getFrequency() + right.getFrequency());
+            parent.setLeft(left);
+            parent.setRight(right);
+            left.setParent(parent);
+            right.setParent(parent);
+            pq.add(parent);
+        }
+        
+        root = pq.poll();
+
+        // ArrayList<FrequencyNode> sortedArray = frequencySort();
+        // while (sortedArray.size() > 1) {
+        //     int last = sortedArray.size() - 1;
+        //     int almostLast = sortedArray.size() - 2;
+        //     int parentFrequency = sortedArray.get(last).getFrequency() + sortedArray.get(almostLast).getFrequency();
+
+        //     FrequencyNode parent = new FrequencyNode((char) 0, parentFrequency);
+        //     parent.setLeft(sortedArray.get(last));
+        //     parent.getLeft().setBinary("0");
+        //     parent.setRight(sortedArray.get(almostLast));
+        //     parent.getRight().setBinary("1");
+        //     sortedArray.get(last).setParent(parent);
+        //     sortedArray.get(almostLast).setParent(parent);
+        //     sortedArray.remove(last);
+        //     sortedArray.remove(almostLast);
+        //     sortedArray.add(parent);
+        //     Collections.sort(sortedArray);
+        //     root = parent;
+        // }
+    }
+    
+    public void assignBinary(FrequencyNode node) {
+        assignBinary(node, new StringBuilder());
     }
 
-    public void assignBinary(FrequencyNode node) {
-        String currentBinary = node.getBinary();
+    public void assignBinary(FrequencyNode node, StringBuilder sb) {
         if (node.getLeft() == null && node.getRight() == null) {
-            binaryDictionary.put(node.getValue(), currentBinary);
+            binaryDictionary.put(node.getValue(), sb.toString());
         }
         if (node.getLeft() != null) {
-            node.getLeft().setBinary(currentBinary + "0");
-            assignBinary(node.getLeft());
+            sb.append('0');
+            assignBinary(node.getLeft(), sb);
+            sb.deleteCharAt(sb.length() - 1);
         }
         if (node.getRight() != null) {
-            node.getRight().setBinary(currentBinary + "1");
-            assignBinary(node.getRight());
+            sb.append('1');
+            assignBinary(node.getRight(), sb);
+            sb.deleteCharAt(sb.length() - 1);
         }
     }
 
@@ -134,7 +158,7 @@ public class HuffmanCodeGenerator {
             PrintWriter pw = new PrintWriter("studentCodeFile.txt");
 
             for (int i = 0; i < 128; i++) {
-                pw.write(getCode((char) i) + '\n');
+                pw.println(getCode((char) i));
             }
             pw.close();
         } catch (Exception e) {

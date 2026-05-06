@@ -90,7 +90,7 @@ public class HuffmanEncoder {
                 String binaryCode = encodeChar(previousChar);
                 count += encodeChar(previousChar).length();
                 binaryChar += binaryCode;
-                if (binaryChar.length() >= 8) {
+                while (binaryChar.length() >= 8) {
                     String toAdd = binaryChar.substring(0, 8);
                     pw.write(Integer.parseInt(toAdd, 2));
                     binaryChar = binaryChar.substring(8);
@@ -103,7 +103,7 @@ public class HuffmanEncoder {
                 binaryChar += "0";
             }
 
-            for (int i = 0; i < binaryChar.length() / 8; i++) {
+            while (binaryChar.length() >= 8) {
                 String toAdd = binaryChar.substring(0, 8);
                 pw.write((char) Integer.parseInt(toAdd, 2));
                 binaryChar = binaryChar.substring(8);

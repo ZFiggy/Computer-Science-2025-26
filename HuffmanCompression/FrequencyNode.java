@@ -83,9 +83,9 @@ public class FrequencyNode implements Comparable {
 
     public int compareTo(Object node) {
         if (this.frequency < ((FrequencyNode) node).getFrequency()) {
-            return 1;
-        } else if (this.frequency > ((FrequencyNode) node).getFrequency()) {
             return -1;
+        } else if (this.frequency > ((FrequencyNode) node).getFrequency()) {
+            return 1;
         } else {
             return 0;
         }

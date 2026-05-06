@@ -102,21 +102,15 @@ public class HuffmanDecoder {
             PrintWriter pw = new PrintWriter("newFile.txt");
 
             char previousChar;
-            String binary = "";
 
             while (br.ready()) {
                 previousChar = (char) br.read();
                 int charAsInt = (int) previousChar;
-                binary += previousChar;
                 String binaryConvert = Integer.toBinaryString(charAsInt);
                 for (int i = binaryConvert.length(); i < 8; i++) {
                     binaryConvert = '0' + binaryConvert;
                 }
-                if (charAsInt == (char) 26) {
-                    break;
-                }
                 pw.write(binaryConvert);
-                binary = "";
             }
 
             br.close();
