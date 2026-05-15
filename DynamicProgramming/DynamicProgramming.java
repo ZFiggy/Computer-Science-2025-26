@@ -54,57 +54,143 @@ public class DynamicProgramming {
     // have to choose!
     // Write a method that returns the maximum POINTS you can get.
     public static int scavHunt(int[] times, int[] points) {
-        return maxReward(times, points, 0);
+        HashMap<Integer, Integer> expectedPayout = new HashMap<Integer, Integer>();
+        return scavHelper(times, points, expectedPayout, 0);
+    }
+
+    public static int scavHelper(int[] times, int[] points, HashMap<Integer, Integer> expectedPayout, int index) {
+
+        if (index == times.length - 1) {
+            return points[index];
+        }
+
+        if (index >= times.length) {
+            return 0;
+        }
+
+        if (expectedPayout.get(index) != null) {
+            return expectedPayout.get(index);
+        }
+
+        int nextIndex = getFiveTimeIndex(index, times);
+        int take = 0;
+
+        if (nextIndex != -1) {
+            take = points[index] + scavHelper(times, points, expectedPayout, nextIndex);
+        }
+
+        int notTake = scavHelper(times, points, expectedPayout, nextIndex + 1);
+
+        int maxMoney = notTake;
+        if (take > notTake) {
+            maxMoney = take;
+        }
+
+        expectedPayout.put(index, maxMoney);
+        return maxMoney;
+    }
+
+    public static int getFiveTimeIndex(int currentIndex, int[] times) {
+        for (int i = currentIndex; i < times.length; i++) {
+            if (times[i] >= times[currentIndex] + 5) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     // This finds the max reward starting at a given index and then it returns that,
     // so eventually it will return the max reward for the whole scav hunt
-    public static int maxReward(int[] times, int[] points, int index) {
-        if (times.length - index - 1 == 0) {
-            return points[index];
-        } else if (times.length - index - 1 < 0) {
-            return 0;
-        } else {
-            int newIndex = -1;
-            if (times.length - index - 1 > 5) {
-                for (int i = 1; i < 6; i++) {
-                    if (times[i + index] > (times[index] + 4)) {
-                        newIndex = i + index;
-                        break;
-                    }
-                }
-            } else {
-                for (int i = 0; i < times.length - index; i++) {
-                    if (times[i + index] > (times[index] + 4)) {
-                        newIndex = i + index;
-                        break;
-                    }
-                }
-            }
-            int bigNumberLeft = 0;
-            if (newIndex == -1) {
-                for (int i = index; i < points.length; i++) {
-                    if (points[i] > bigNumberLeft) {
-                        bigNumberLeft = points[i];
-                    }
-                }
-                return bigNumberLeft;
-            }
-            int taken = points[index] + maxReward(times, points, newIndex);
-            int notTaken = maxReward(times, points, index + 1);
-            if (taken > notTaken) {
-                return taken;
-            } else {
-                return notTaken;
-            }
-        }
-    }
+    // public static int maxReward(int[] times, int[] points, int index) {
+    // if (times.length - index - 1 == 0) {
+    // return points[index];
+    // } else if (times.length - index - 1 < 0) {
+    // return 0;
+    // } else {
+    // int newIndex = -1;
+    // if (times.length - index - 1 > 5) {
+    // for (int i = 1; i < 6; i++) {
+    // if (times[i + index] > (times[index] + 4)) {
+    // newIndex = i + index;
+    // break;
+    // }
+    // }
+    // } else {
+    // for (int i = 0; i < times.length - index; i++) {
+    // if (times[i + index] > (times[index] + 4)) {
+    // newIndex = i + index;
+    // break;
+    // }
+    // }
+    // }
+    // int bigNumberLeft = 0;
+    // if (newIndex == -1) {
+    // for (int i = index; i < points.length; i++) {
+    // if (points[i] > bigNumberLeft) {
+    // bigNumberLeft = points[i];
+    // }
+    // }
+    // return bigNumberLeft;
+    // }
+    // int taken = points[index] + maxReward(times, points, newIndex);
+    // int notTaken = maxReward(times, points, index + 1);
+    // if (taken > notTaken) {
+    // return taken;
+    // } else {
+    // return notTaken;
+    // }
+    // }
+    // }
 
     /*
      * Uses memoization to calculate the route which grants the most cookies,
      * starting at [0][0], only going right or down at each point
      */
     public static int dynamicCookies(int[][] cookieGrid) {
+
+    }
+
+    private boolean goodPoint(int row, int col) {
+
+        return (row >= 0 && row < numRows && col >= 0 && col < numCols && cookieGrid[row][col] >= 0);
+
+    }
+
+    /*
+     * RECURSIVELY calculates the route which grants the most cookies.
+     * 
+     * 
+     * Returns the maximum number of cookies attainable.
+     */
+
+    public int recursiveCookies() {
+
+        return recursiveOptimalPath(0, 0);
+
+    }
+
+    /*
+     * Helper function for the above, which returns the maximum number of cookies
+     * 
+     * 
+     * edible starting at coordinate (row, col).
+     */
+
+    /* From any given position, always check right before checking down */
+
+    private int recursiveOptimalPath(int row, int col) {
+
+        if (!goodPoint(row, col)) {
+
+            return 0;
+
+        }
+
+        int down = recursiveOptimalPath(row + 1, col);
+
+        int right = recursiveOptimalPath(row, col + 1);
+
+        return cookieGrid[row][col] + Math.max(right, down);
 
     }
 
