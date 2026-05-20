@@ -79,7 +79,7 @@ public class DynamicProgramming {
             take = points[index] + scavHelper(times, points, expectedPayout, nextIndex);
         }
 
-        int notTake = scavHelper(times, points, expectedPayout, nextIndex + 1);
+        int notTake = scavHelper(times, points, expectedPayout, index + 1);
 
         int maxMoney = notTake;
         if (take > notTake) {
@@ -147,25 +147,16 @@ public class DynamicProgramming {
      * starting at [0][0], only going right or down at each point
      */
     public static int dynamicCookies(int[][] cookieGrid) {
+        int[][] solutionGrid = new int[cookieGrid.length][cookieGrid[0].length];
 
+        return recursiveOptimalPath(0, 0, cookieGrid, solutionGrid);
     }
 
-    private boolean goodPoint(int row, int col) {
+    private static boolean goodPoint(int row, int col, int[][] cookieGrid) {
+        int numRows = cookieGrid.length;
+        int numCols = cookieGrid[0].length;
 
         return (row >= 0 && row < numRows && col >= 0 && col < numCols && cookieGrid[row][col] >= 0);
-
-    }
-
-    /*
-     * RECURSIVELY calculates the route which grants the most cookies.
-     * 
-     * 
-     * Returns the maximum number of cookies attainable.
-     */
-
-    public int recursiveCookies() {
-
-        return recursiveOptimalPath(0, 0);
 
     }
 
@@ -178,17 +169,26 @@ public class DynamicProgramming {
 
     /* From any given position, always check right before checking down */
 
-    private int recursiveOptimalPath(int row, int col) {
+    private static int recursiveOptimalPath(int row, int col, int[][] cookieGrid, int[][] solutionGrid) {
 
-        if (!goodPoint(row, col)) {
-
+        if (!goodPoint(row, col, cookieGrid)) {
             return 0;
-
         }
 
-        int down = recursiveOptimalPath(row + 1, col);
+        if (solutionGrid[row][col] != 0) {
+            return solutionGrid[row][col];
+        }
 
-        int right = recursiveOptimalPath(row, col + 1);
+        int down = recursiveOptimalPath(row + 1, col, cookieGrid, solutionGrid);
+        int right = recursiveOptimalPath(row, col + 1, cookieGrid, solutionGrid);
+
+        if (goodPoint(row + 1, col, cookieGrid)) {
+            solutionGrid[row + 1][col] = down;
+        }
+        
+        if (goodPoint(row, col + 1, cookieGrid)) {
+            solutionGrid[row][col + 1] = right;
+        }
 
         return cookieGrid[row][col] + Math.max(right, down);
 
